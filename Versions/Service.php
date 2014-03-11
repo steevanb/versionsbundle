@@ -85,6 +85,9 @@ class Service
 					throw new \Exception('Pre schema update installation of "' . $service->getBundleName() . '" is already done.');
 				} else if ($service instanceof PreSchema) {
 					$version = $service->preSchema();
+					if (!$version instanceof Version) {
+						throw new \Exception('preSchema method must return an instance of kujaff\VersionsBundle\Versions\Version.');
+					}
 					$bundleVersion->setInstalledVersion($version);
 				}
 
@@ -120,6 +123,9 @@ class Service
 					throw new \Exception('Post schema update installation of "' . $service->getBundleName() . '" is already done.');
 				} else if ($service instanceof PostSchema) {
 					$version = $service->postSchema();
+					if (!$version instanceof Version) {
+						throw new \Exception('postSchema method must return an instance of kujaff\VersionsBundle\Versions\Version.');
+					}
 					$bundleVersion->setInstalledVersion($version);
 				}
 
