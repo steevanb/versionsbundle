@@ -1,0 +1,17 @@
+{
+    "name": "kujaff/versionsbundle",
+    "license": "MIT",
+    "type": "bundle",
+    "description": "Add version information to your bundles, with updates and more",
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-0": { "kujaff\\VersionsBundle\\": "" }
+    },
+    "target-dir": "kujaff/VersionsBundle",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/kujaff/versionsbundle.git"
+        }
+    ]
+}
