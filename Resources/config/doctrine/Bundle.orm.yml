@@ -1,0 +1,28 @@
+kujaff\VersionsBundle\Entity\Bundle:
+    type: entity
+    table: versions_bundles
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        name:
+            type: string
+            length: '50'
+        installationPreSchema:
+            type: boolean
+        installationPostSchema:
+            type: boolean
+        installationDate:
+            type: datetime
+        installedVersion:
+            type: version
+            length: '10'
+            nullable: true
+        updateDate:
+            type: datetime
+            nullable: true
+            
+    lifecycleCallbacks: {  }
