@@ -1,7 +1,7 @@
-versionsbundle
+VersionsBundle
 ==============
 
-Add version information to your bundles, with updates and mores
+Add version information to your bundles, with install, updates, uninstall
 
 Installation
 ============
