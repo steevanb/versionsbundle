@@ -221,3 +221,45 @@ Create the service who implements Uninstall :
 			// make stuff to uninstall your bundle, like removing dirs, removing database tables, etc
 		}
 	}
+
+Install a bundle
+================
+
+You can use SF2 console :
+	
+	php app/console bundle:install MyBundle
+
+Or you can use Installer service :
+	
+	$container->get('bundle.installer')->install('MyBundle');
+
+Update a bundle
+===============
+
+You can use SF2 console :
+	
+	php app/console bundle:upate MyBundle
+
+Or you can use Installer service :
+	
+	$container->get('bundle.installer')->update('MyBundle');
+
+Uninstall a bundle
+==================
+
+You can use SF2 console :
+	
+	php app/console bundle:uninstall MyBundle
+
+Or you can use Installer service :
+	
+	$container->get('bundle.installer')->uninstall('MyBundle');
+
+Get bundle installed version informations
+=========================================
+
+	# will return an instance of kujaff\VersionsBundle\Versions\VersionnedBundle
+	# getVersion is bundle files version
+	# getInstalledVersion is the installed version
+	# see VersionnedBundle for other methods
+	$container->get('bundle.version')->get('MyBundle');
