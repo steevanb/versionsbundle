@@ -46,7 +46,7 @@ Make your bundle versionned by extending VersionnedBundle instead of Bundle :
     use kujaff\VersionsBundle\Versions\VersionnedBundle;
     use kujaff\VersionsBundle\Versions\Version;
 
-    class DashboardBundle extends VersionnedBundle
+    class MyBundle extends VersionnedBundle
     {
         public function __construct()
         {
