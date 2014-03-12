@@ -134,7 +134,7 @@ class Service
 
 		$bundleVersion->setInstalledVersion($installedVersion);
 		$bundleVersion->setUpdateDate(new \DateTime());
-		//$this->container->get('doctrine')->getEntityManager()->flush();
+		$this->container->get('doctrine')->getEntityManager()->flush();
 
 		return $installedVersion;
 	}
