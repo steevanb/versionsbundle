@@ -54,10 +54,10 @@ Makes your bundle versionned by extending VersionnedBundle instead of Bundle :
         }
     }
 
-Make an install script
-======================
+Create an install script
+========================
 
-Create a service with tag 'bundle.install', who implements Install :
+Declare a service with tag bundle.install :
 
     # MyBundle/Resources/config/services.yml
     services :
@@ -66,28 +66,30 @@ Create a service with tag 'bundle.install', who implements Install :
             tags:
                 - { name: bundle.install }
 
-    # MyBundle/Installer/Install.php
-    namespace MyBundle/Installer;
+Create the service who implements Install :
 
-    use kujaff\VersionsBundle\Installer\Install as BaseInstall;
-    use kujaff\VersionsBundle\Versions\Version;
+	# MyBundle/Installer/Install.php
+	namespace MyBundle/Installer;
 
-    class Install implements BaseInstall
-    {
-	public function getBundleName()
+	use kujaff\VersionsBundle\Installer\Install as BaseInstall;
+	use kujaff\VersionsBundle\Versions\Version;
+
+	class Install implements BaseInstall
 	{
-            return 'MyBundle';
-	}
+		public function getBundleName()
+		{
+			return 'MyBundle';
+		}
 
-	public function install()
-	{
-            // make stuff to install your bundle, like creating dirs, updating database schema, etc
-            // and then return the version when installation is done
-            // most of the time it will NOT be the bundle version, it's the version when THIS script is done
-            // an update will be performed after the installation to update to the bundle version
-            return new Version('1.0.0');
+		public function install()
+		{
+			// make stuff to install your bundle, like creating dirs, updating database schema, etc
+			// and then return the version when installation is done
+			// most of the time it will NOT be the bundle version, it's the version when THIS script is done
+			// an update will be performed after the installation to update to the bundle version
+			return new Version('1.0.0');
+		}
 	}
-    }
 
 Create an update script by implementing Update
 ==============================================
