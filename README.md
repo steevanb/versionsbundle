@@ -145,6 +145,8 @@ Example :
 	2) Try to find a method named update_1_0_2 to update bundle from 1.0.1 to 1.0.2
 	3) Try to find a method named update_1_0_3 to update bundle from 1.0.2 to 1.0.3
 
+Declare a service with tag bundle.update :
+
     # MyBundle/Resources/config/services.yml
     services :
         mybundle.updater:
@@ -153,34 +155,36 @@ Example :
             tags:
                 - { name: bundle.update }
 
-    # MyBundle/Installer/Update.php
-    namespace MyBundle/Installer;
+Create the service who extends UpdateMethods :
 
-    use kujaff\VersionsBundle\Installer\UpdateMethods;
-    use kujaff\VersionsBundle\Versions\Version;
-    use kujaff\VersionsBundle\Versions\BundleVersion;
+	# MyBundle/Installer/Update.php
+	namespace MyBundle/Installer;
 
-    class Update extends UpdateMethods
-    {
-        public function __construct(ContainerInterface $container)
+	use kujaff\VersionsBundle\Installer\UpdateMethods;
+	use kujaff\VersionsBundle\Versions\Version;
+	use kujaff\VersionsBundle\Versions\BundleVersion;
+
+	class Update extends UpdateMethods
 	{
-            parent::__construct($container);
-            // call findUpdateMethods to parse your class and find methods prefixed by update_
-            $this->_findUpdateMethods($this);
-	}
+		public function __construct(ContainerInterface $container)
+		{
+			parent::__construct($container);
+			// call findUpdateMethods to parse your class and find methods prefixed by update_
+			$this->_findUpdateMethods($this);
+		}
 
-	public function getBundleName()
-	{
-            return 'MyBundle';
-	}
+		public function getBundleName()
+		{
+			return 'MyBundle';
+		}
 
-	public function update_1_0_1()
-	{
-            // called when version is inferior to 1.0.1, to update it to 1.0.1
-	}
+		public function update_1_0_1()
+		{
+			// called when version is inferior to 1.0.1, to update it to 1.0.1
+		}
 
-        public function update_1_0_3()
-	{
-            // called when version is inferior to 1.0.3, to update it to 1.0.3
+		public function update_1_0_3()
+		{
+			// called when version is inferior to 1.0.3, to update it to 1.0.3
+		}
 	}
-    }
