@@ -60,10 +60,8 @@ abstract class UpdateMethods implements Update
 	{
 		$service = $this->container->get('bundle.version');
 		foreach ($this->patchs as $patch) {
-			if ($service->compare($patch, $bundleVersion->getVersion()) <= 0) {
+			if ($service->compare($patch, $bundleVersion->getInstalledVersion()) == 1 && $service->compare($patch, $bundleVersion->getVersion()) <= 0) {
 				$this->{'update_' . str_replace('.', '_', $patch)}();
-			} else {
-				break;
 			}
 		}
 		return $bundleVersion->getVersion();

@@ -119,6 +119,11 @@ class Service
 			throw new \Exception('Bundle "' . $bundle . '" is not installed.');
 		}
 
+		// already up to date
+		if ($bundleVersion->getInstalledVersion()->get() == $bundleVersion->getVersion()->get()) {
+			return $bundleVersion->getInstalledVersion();
+		}
+
 		$service = $this->_getService($bundle, 'update');
 		// an update service has be found
 		if ($service !== false) {
