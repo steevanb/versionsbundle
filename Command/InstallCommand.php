@@ -19,7 +19,7 @@ class InstallCommand extends ContainerAwareCommand
 	protected function configure()
 	{
 		$this
-			->setName('bundles:install')
+			->setName('bundle:install')
 			->setDescription('Install a bundle')
 			->addArgument('name', InputArgument::REQUIRED)
 		;
@@ -45,22 +45,16 @@ class InstallCommand extends ContainerAwareCommand
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		$name = $input->getArgument('name');
-		$bundle = $this->getContainer()->get('bundle.version')->get($name);
-		if ($bundle->isInstalled()) {
-			throw new \Exception('Bundle "' . $name . '" is already installed.');
-		}
+		$bundleVersion = $this->getContainer()->get('bundle.version')->get($name);
 
-		// before schema update
-		if ($bundle->getInstallationPreSchema() == false) {
-			$this->_command($output, 'bundles:install:preSchema', array('name' => $name));
-		}
+		// install
+		$output->write('[<comment>' . $name . '</comment>] Installing ... ');
+		$installedVersion = $this->getContainer()->get('bundle.installer')->install($name);
+		$output->writeln('<info>' . $installedVersion->get() . '</info> installed.');
 
-		// update database schema
-		$this->_command($output, 'doctrine:schema:update', array('--force' => true));
-
-		// after schema update
-		if ($bundle->getInstallationPostSchema() == false) {
-			$this->_command($output, 'bundles:install:postSchema', array('name' => $name));
+		// update
+		if ($installedVersion->get() != $bundleVersion->getVersion()->get()) {
+			$this->_command($output, 'bundle:update', array('name' => $name));
 		}
 	}
 

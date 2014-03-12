@@ -1,11 +1,13 @@
 <?php
-namespace kujaff\VersionsBundle\Uninstall;
+namespace kujaff\VersionsBundle\Installer;
 
 /**
  * Interface to implements for uninstalling a bundle
  */
 interface Uninstall
 {
+
+	public function getBundleName();
 
 	/**
 	 * Uninstall

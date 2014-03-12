@@ -6,7 +6,7 @@ use kujaff\VersionsBundle\Versions\Version;
 /**
  * Bundles
  */
-class Bundle
+class BundleVersion
 {
 	/**
 	 * @var integer
@@ -17,16 +17,6 @@ class Bundle
 	 * @var string
 	 */
 	private $name;
-
-	/**
-	 * @var boolean
-	 */
-	private $installationPreSchema = false;
-
-	/**
-	 * @var boolean
-	 */
-	private $installationPostSchema = false;
 
 	/**
 	 * @var \DateTime
@@ -79,46 +69,6 @@ class Bundle
 	}
 
 	/**
-	 * Define if installation before schema update is done
-	 *
-	 * @param boolean $installed
-	 */
-	public function setInstallationPreSchema($installed)
-	{
-		$this->installationPreSchema = (bool) $installed;
-	}
-
-	/**
-	 * Indicate if installation before schema update is done
-	 *
-	 * @return boolean
-	 */
-	public function getInstallationPreSchema()
-	{
-		return $this->installationPreSchema;
-	}
-
-	/**
-	 * Define if installation after schema update is done
-	 *
-	 * @param boolean $installed
-	 */
-	public function setInstallationPostSchema($installed)
-	{
-		$this->installationPostSchema = (bool) $installed;
-	}
-
-	/**
-	 * Indicate if installation after schema update is done
-	 *
-	 * @return boolean
-	 */
-	public function getInstallationPostSchema()
-	{
-		return $this->installationPostSchema;
-	}
-
-	/**
 	 * Set installation date
 	 *
 	 * @param \DateTime $installation
@@ -147,7 +97,7 @@ class Bundle
 	 */
 	public function isInstalled()
 	{
-		return ($this->getInstallationPreSchema() && $this->getInstallationPostSchema());
+		return ($this->getInstallationDate() != null);
 	}
 
 	/**

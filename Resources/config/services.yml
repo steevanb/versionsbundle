@@ -1,4 +1,9 @@
 services:
+    
     bundle.version:
         class: kujaff\VersionsBundle\Versions\Service
+        arguments: [@service_container]
+        
+    bundle.installer:
+        class: kujaff\VersionsBundle\Installer\Service
         arguments: [@service_container]

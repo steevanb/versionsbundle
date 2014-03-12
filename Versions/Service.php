@@ -2,32 +2,17 @@
 namespace kujaff\VersionsBundle\Versions;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use kujaff\VersionsBundle\Entity\Bundle;
-use kujaff\VersionsBundle\Install\Install;
-use kujaff\VersionsBundle\Install\PostSchema;
+use kujaff\VersionsBundle\Entity\BundleVersion;
 
+/**
+ * Service for BundleVersions
+ */
 class Service
 {
 	/**
 	 * @var ContainerInterface
 	 */
 	private $container;
-
-	/**
-	 * Return tagged services
-	 *
-	 * @param string $tag
-	 * @return array
-	 * @throws \Exception
-	 */
-	private function _getServices($tag)
-	{
-		$fileName = $this->container->getParameter('kernel.cache_dir') . DIRECTORY_SEPARATOR . 'services.bundle.' . $tag . '.php';
-		if (file_exists($fileName) === false) {
-			throw new \Exception('Unable to find service tagged "bundle."' . $tag . '.');
-		}
-		return require($fileName);
-	}
 
 	/**
 	 * Constructor
@@ -40,20 +25,19 @@ class Service
 	}
 
 	/**
-	 * Get version information about a bundle
+	 * Get bundle version informations
 	 *
 	 * @param string $bundle
-	 * @return Bundle
+	 * @return BundleVersion
 	 */
-	public function get($name)
+	public function get($bundle)
 	{
 		$doctrine = $this->container->get('doctrine');
-		$return = $doctrine->getRepository('VersionsBundle:Bundle')->findOneByName($name);
+		$return = $doctrine->getRepository('VersionsBundle:BundleVersion')->findOneByName($bundle);
 		if ($return == null) {
-			$return = new Bundle($name);
-			$doctrine->getEntityManager()->persist($return);
+			$return = new BundleVersion($bundle);
 		}
-		$bundle = _service('kernel')->getBundle('DashboardBundle');
+		$bundle = $this->container->get('kernel')->getBundle($bundle);
 		if ($bundle instanceof VersionnedBundle) {
 			$return->setVersion($bundle->getVersion());
 		}
@@ -61,108 +45,31 @@ class Service
 	}
 
 	/**
-	 * Installation before schema update
+	 * Return -1 if $version1 < $version2, 0 if $version1 = $version2, +1 if $version1 > $version2
 	 *
-	 * @param string $name
-	 * @throws \Exception
+	 * @param mixed $version1 Can be a string (X.Y.Z) or a Version instance
+	 * @param mixed $version2 Can be a string (X.Y.Z) or a Version instance
 	 */
-	public function installPreSchema($name)
+	public function compare($version1, $version2)
 	{
-		$manager = $this->container->get('doctrine')->getEntityManager();
-		foreach ($this->_getServices('install') as $id) {
-			$service = $this->container->get($id);
-			if (!$service instanceof Install) {
-				throw new \Exception('Service "' . $service . '" must implements kujaff\VersionsBundle\Install\Install.');
-			}
-
-			if ($service->getBundleName() == $name) {
-				$bundleVersion = $this->get($service->getBundleName());
-				if ($bundleVersion->getVersion() == null) {
-					throw new \Exception('Bundle "' . $service->getBundleName() . '" must have a version defined in his main class, via getVersion method.');
-				}
-
-				if ($bundleVersion->getInstallationPreSchema()) {
-					throw new \Exception('Pre schema update installation of "' . $service->getBundleName() . '" is already done.');
-				} else if ($service instanceof PreSchema) {
-					$version = $service->preSchema();
-					if (!$version instanceof Version) {
-						throw new \Exception('preSchema method must return an instance of kujaff\VersionsBundle\Versions\Version.');
-					}
-					$bundleVersion->setInstalledVersion($version);
-				}
-
-				$bundleVersion->setInstallationDate(new \DateTime());
-				$bundleVersion->setInstallationPreSchema(true);
-				$manager->flush();
-			}
+		if (is_string($version1)) {
+			$version1 = new Version($version1);
 		}
-	}
-
-	/**
-	 * Installation after schema update
-	 *
-	 * @param string $name
-	 * @throws \Exception
-	 */
-	public function installPostSchema($name)
-	{
-		$manager = $this->container->get('doctrine')->getEntityManager();
-		foreach ($this->_getServices('install') as $id) {
-			$service = $this->container->get($id);
-			if (!$service instanceof Install) {
-				throw new \Exception('Service "' . $service . '" must implements kujaff\VersionsBundle\Install\Install.');
-			}
-
-			if ($service->getBundleName() == $name) {
-				$bundleVersion = $this->get($service->getBundleName());
-				if ($bundleVersion->getVersion() == null) {
-					throw new \Exception('Bundle "' . $service->getBundleName() . '" must have a version defined in his main class, via getVersion method.');
-				}
-
-				if ($bundleVersion->getInstallationPostSchema()) {
-					throw new \Exception('Post schema update installation of "' . $service->getBundleName() . '" is already done.');
-				} else if ($service instanceof PostSchema) {
-					$version = $service->postSchema();
-					if (!$version instanceof Version) {
-						throw new \Exception('postSchema method must return an instance of kujaff\VersionsBundle\Versions\Version.');
-					}
-					$bundleVersion->setInstalledVersion($version);
-				}
-
-				$bundleVersion->setInstallationDate(new \DateTime());
-				$bundleVersion->setInstallationPostSchema(true);
-				$manager->flush();
-			}
-		}
-	}
-
-	/**
-	 * Uninstall a bundle
-	 *
-	 * @param string $name
-	 * @throws \Exception
-	 */
-	public function uninstall($name)
-	{
-		$version = $this->get($name);
-		$manager = $this->container->get('doctrine')->getEntityManager();
-
-		if ($version->isInstalled() == false) {
-			throw new \Exception('Bundle "' . $name . '" is not installed.');
+		if (is_string($version2)) {
+			$version2 = new Version($version2);
 		}
 
-		foreach ($this->_getServices('uninstall') as $serviceId) {
-			$service = $this->container->get($serviceId);
-			if ($service->getBundleName() == $name) {
-				if (!$service instanceof Uninstall) {
-					throw new \Exception('Service "' . $serviceId . '" must implements kujaff\VersionsBundle\Uninstall\Uninstall.');
-				}
-				$service->uninstall();
-			}
-		}
+		$lengthMajor = max(strlen($version1->getMajor()), strlen($version2->getMajor()));
+		$lengthMinor = max(strlen($version1->getMinor()), strlen($version2->getMinor()));
+		$lengthPatch = max(strlen($version1->getPatch()), strlen($version2->getPatch()));
+		$version1Number = sprintf('%0' . $lengthMajor . 's', $version1->getMajor()) . sprintf('%0' . $lengthMinor . 's', $version1->getMinor()) . sprintf('%0' . $lengthPatch . 's', $version1->getPatch());
+		$version2Number = sprintf('%0' . $lengthMajor . 's', $version2->getMajor()) . sprintf('%0' . $lengthMinor . 's', $version2->getMinor()) . sprintf('%0' . $lengthPatch . 's', $version2->getPatch());
 
-		$manager->remove($version);
-		$manager->flush();
+		if ($version1Number == $version2Number) {
+			return 0;
+		} else {
+			return ($version1Number > $version2Number) ? 1 : -1;
+		}
 	}
 
 }
