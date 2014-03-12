@@ -38,9 +38,9 @@ Add version type in your Doctrine config :
                 version: kujaff\VersionsBundle\Versions\DoctrineType
 
 Make your bundle versionned
-===========================
+============================
 
-Makes your bundle versionned by extending VersionnedBundle instead of Bundle :
+Make your bundle versionned by extending VersionnedBundle instead of Bundle :
 
     # MyBundle/MyBundle.php
     use kujaff\VersionsBundle\Versions\VersionnedBundle;
@@ -94,7 +94,7 @@ Create the service who implements Install :
 Create an update script by implementing Update
 ==============================================
 
-Create a service with tag 'bundle.install', who implements Update :
+Declare a service with tag bundle.update :
 
     # MyBundle/Resources/config/services.yml
     services :
@@ -103,28 +103,30 @@ Create a service with tag 'bundle.install', who implements Update :
             tags:
                 - { name: bundle.update }
 
-    # MyBundle/Installer/Update.php
-    namespace MyBundle/Installer;
+Create the service who implements Update :
 
-    use kujaff\VersionsBundle\Installer\Update as BaseUpdate;
-    use kujaff\VersionsBundle\Versions\Version;
-    use kujaff\VersionsBundle\Versions\BundleVersion;
+	# MyBundle/Installer/Update.php
+	namespace MyBundle/Installer;
 
-    class Update implements BaseUpdate
-    {
-	public function getBundleName()
+	use kujaff\VersionsBundle\Installer\Update as BaseUpdate;
+	use kujaff\VersionsBundle\Versions\Version;
+	use kujaff\VersionsBundle\Versions\BundleVersion;
+
+	class Update implements BaseUpdate
 	{
-            return 'MyBundle';
-	}
+		public function getBundleName()
+		{
+			return 'MyBundle';
+		}
 
-	public function update(BundleVersion $bundleVersion)
-	{
-            // make stuff to update your bundle, like creating dirs, updating database schema, etc
-            // and then return the version when update is done
-            // to get the installed version, see $bundleVersion->getInstalledVersion()
-            return new Version('1.0.1');
+		public function update(BundleVersion $bundleVersion)
+		{
+			// make stuff to update your bundle, like creating dirs, updating database schema, etc
+			// and then return the version when update is done
+			// to get the installed version, see $bundleVersion->getInstalledVersion()
+			return new Version('1.0.1');
+		}
 	}
-    }
 
 Create an update script by extending UpdateMethods
 ==================================================
