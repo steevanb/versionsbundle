@@ -2,7 +2,6 @@
 namespace kujaff\VersionsBundle\Versions;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use kujaff\VersionsBundle\Versions\Exception;
 
 /**
  * Extends this class instead of Bundle SF2 class to add getVersion
