@@ -131,7 +131,7 @@ Create the service who implements Update :
 Create an update script by extending UpdateMethods
 ==================================================
 
-An easiest way to create updates for your bundle is to create a service with tag 'bundle.install', who extends UpdateMethods.
+An easiest way to create updates for your bundle is to create a service with tag bundle.install, who extends UpdateMethods.
 
 Each methods prefixed by 'update_' will be parsed to see if we need to call it for the current update.
 
