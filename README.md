@@ -259,7 +259,7 @@ Get bundle installed version informations
 =========================================
 
 	# will return an instance of kujaff\VersionsBundle\Versions\VersionnedBundle
-	# getVersion is bundle files version
-	# getInstalledVersion is the installed version
+	# getVersion() is bundle files version
+	# getInstalledVersion() is the installed version
 	# see VersionnedBundle for other methods
 	$container->get('bundle.version')->get('MyBundle');
