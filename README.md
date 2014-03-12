@@ -124,7 +124,7 @@ Create the service who implements Update :
 			// make stuff to update your bundle, like creating dirs, updating database schema, etc
 			// and then return the version when update is done
 			// to get the installed version, see $bundleVersion->getInstalledVersion()
-			return new Version('1.0.1');
+			return new Version('1.0.3');
 		}
 	}
 
@@ -132,11 +132,17 @@ Create an update script by extending UpdateMethods
 ==================================================
 
 An easiest way to create updates for your bundle is to create a service with tag 'bundle.install', who extends UpdateMethods.
+
 Each methods prefixed by 'update_' will be parsed to see if we need to call it for the current update.
-If a version doesn't need a patch, don't create an empty method, it's useless
+
+If a version doesn't need a patch, don't create an empty method, it's useless.
+
 Example :
+
   -> Current bundle installed version : 1.0.0
+  
   -> Current bundle files version : 1.0.3
+  
   1) Try to find a method named update_1_0_1 to update bundle from 1.0.0 to 1.0.1
   2) Try to find a method named update_1_0_2 to update bundle from 1.0.1 to 1.0.2
   3) Try to find a method named update_1_0_3 to update bundle from 1.0.2 to 1.0.3
