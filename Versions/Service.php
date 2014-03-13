@@ -45,6 +45,22 @@ class Service
 	}
 
 	/**
+	 * Get versionned bundles
+	 *
+	 * @return BundleVersion[]
+	 */
+	public function getVersionnedBundles()
+	{
+		$return = array();
+		foreach ($this->container->get('kernel')->getBundles() as $bundle) {
+			if ($bundle instanceof VersionnedBundle) {
+				$return[] = $this->getBundleVersion($bundle->getName());
+			}
+		}
+		return $return;
+	}
+
+	/**
 	 * Return -1 if $version1 < $version2, 0 if $version1 = $version2, +1 if $version1 > $version2
 	 *
 	 * @param mixed $version1 Can be a string (X.Y.Z) or a Version instance
