@@ -52,6 +52,39 @@ abstract class UpdateMethods implements Update
 	}
 
 	/**
+	 * Execute a DQL query (only for SELECT, UPDATE or DELETE)
+	 *
+	 * @param string $dql
+	 * @param array $parameters
+	 * @return mixed
+	 */
+	protected function _executeDQL($dql, $parameters = array())
+	{
+		$em = $this->container->get('doctrine')->getEntityManager();
+		$query = $em->createQuery($dql);
+		foreach ($parameters as $name => $value) {
+			$query->setParameter($name, $value);
+		}
+		return $query->getResult();
+	}
+
+	/**
+	 * Execute raw SQL
+	 *
+	 * @param string $sql
+	 * @param array $parameters
+	 */
+	protected function _executeSQL($sql, $parameters = array())
+	{
+		$em = $this->container->get('doctrine')->getEntityManager();
+		$stmt = $em->getConnection()->prepare($sql);
+		foreach ($parameters as $name => $value) {
+			$stmt->bindValue($name, $value);
+		}
+		return $stmt->execute();
+	}
+
+	/**
 	 * Update bundle
 	 *
 	 * @param BundleVersion $bundleVersion
