@@ -48,7 +48,7 @@ class Service
 	 */
 	private function _getBundleVersion($bundle)
 	{
-		$return = $this->container->get('bundle.version')->get($bundle);
+		$return = $this->container->get('bundle.version')->getBundleVersion($bundle);
 		if ($return->getVersion() == null) {
 			throw new \Exception('Bundle "' . $bundle . '" main class must extends kujaff\VersionsBundle\Versions\VersionnedBundle.');
 		}

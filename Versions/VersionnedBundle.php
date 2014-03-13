@@ -43,7 +43,7 @@ class VersionnedBundle extends Bundle
 			if (isset($GLOBALS['argv']) && is_array($GLOBALS['argv']) && $GLOBALS['argv'][0] == 'app/console') {
 				return null;
 			}
-			$bundleVersion = $this->container->get('bundle.version')->get($this->getName());
+			$bundleVersion = $this->container->get('bundle.version')->getBundleVersion($this->getName());
 			if ($this->needInstallation && $bundleVersion->isInstalled() == false) {
 				throw new Exception('Bundle "' . $this->getName() . '" needs to be installed. Exec "php app/console bundle:install ' . $this->getName() . '".');
 			}

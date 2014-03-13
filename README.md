@@ -268,4 +268,4 @@ Get bundle installed version informations
 	# getVersion() is bundle files version
 	# getInstalledVersion() is the installed version
 	# see VersionnedBundle for other methods
-	$container->get('bundle.version')->get('MyBundle');
+	$container->get('bundle.version')->getBundleVersion('MyBundle');

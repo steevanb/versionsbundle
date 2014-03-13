@@ -45,7 +45,7 @@ class InstallCommand extends ContainerAwareCommand
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		$name = $input->getArgument('name');
-		$bundleVersion = $this->getContainer()->get('bundle.version')->get($name);
+		$bundleVersion = $this->getContainer()->get('bundle.version')->getBundleVersion($name);
 
 		// install
 		$output->write('[<comment>' . $name . '</comment>] Installing ... ');

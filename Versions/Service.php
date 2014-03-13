@@ -30,7 +30,7 @@ class Service
 	 * @param string $bundle
 	 * @return BundleVersion
 	 */
-	public function get($bundle)
+	public function getBundleVersion($bundle)
 	{
 		$doctrine = $this->container->get('doctrine');
 		$return = $doctrine->getRepository('VersionsBundle:BundleVersion')->findOneByName($bundle);

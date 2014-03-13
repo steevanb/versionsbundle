@@ -173,7 +173,17 @@ class BundleVersion
 	 */
 	public function needUpdate()
 	{
-		return $this->getVersion()->get() != $this->getInstalledVersion()->get();
+		return ($this->getVersion()->get() != $this->getInstalledVersion()->get());
+	}
+
+	/**
+	 * Indicate if bundle is versionned
+	 *
+	 * @return boolean
+	 */
+	public function isVersionned()
+	{
+		return ($this->getVersion() instanceof Version);
 	}
 
 }
