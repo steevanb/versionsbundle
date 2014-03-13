@@ -234,6 +234,7 @@ Install a bundle
 You can use SF2 console :
 	
 	php app/console bundle:install MyBundle
+        php app/console bundle:install:all
 
 Or you can use Installer service :
 	
@@ -245,6 +246,7 @@ Update a bundle
 You can use SF2 console :
 	
 	php app/console bundle:upate MyBundle
+        php app/console bundle:upate:all
 
 Or you can use Installer service :
 	
@@ -261,8 +263,14 @@ Or you can use Installer service :
 	
 	$container->get('bundle.installer')->uninstall('MyBundle');
 
-Get bundle installed version informations
-=========================================
+Get bundle version informations
+===============================
+
+You can use SF2 console :
+
+	php app/console bundle:version MyBundle
+
+Or you can use Version service :
 
 	# will return an instance of kujaff\VersionsBundle\Versions\VersionnedBundle
 	# getVersion() is bundle files version
