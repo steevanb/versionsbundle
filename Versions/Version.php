@@ -69,7 +69,7 @@ class Version
 	 *
 	 * @return type
 	 */
-	public function get()
+	public function asString()
 	{
 		return $this->getMajor() . '.' . $this->getMinor() . '.' . $this->getPatch();
 	}

@@ -43,14 +43,14 @@ class VersionCommand extends ContainerAwareCommand
 
 			// versionned bundle
 		} else {
-			$output->writeln('Files version : ' . $bundleVersion->getVersion()->get());
+			$output->writeln('Files version : ' . $bundleVersion->getVersion()->asString());
 			if ($bundleVersion->getInstalledVersion() == null) {
 				$output->writeln('Installed version : <error>not installed</error>');
 			} else {
 				if ($bundleVersion->needUpdate()) {
-					$output->writeln('Installed version : <error>' . $bundleVersion->getInstalledVersion()->get() . '</error> (run php \'app/console bundle:update ' . $name . '\' to update to ' . $bundleVersion->getVersion()->get() . ')');
+					$output->writeln('Installed version : <error>' . $bundleVersion->getInstalledVersion()->asString() . '</error> (run php \'app/console bundle:update ' . $name . '\' to update to ' . $bundleVersion->getVersion()->asString() . ')');
 				} else {
-					$output->writeln('Installed version : <info>' . $bundleVersion->getInstalledVersion()->get() . '</info>');
+					$output->writeln('Installed version : <info>' . $bundleVersion->getInstalledVersion()->asString() . '</info>');
 				}
 				$output->writeln('Installation date : ' . $bundleVersion->getInstallationDate()->format('Y-m-d H:i:s'));
 				$updateDate = ($bundleVersion->getUpdateDate() == null) ? 'none' : $bundleVersion->getInstallationDate()->format('Y-m-d H:i:s');

@@ -120,7 +120,7 @@ class Service
 		}
 
 		// already up to date
-		if ($bundleVersion->getInstalledVersion()->get() == $bundleVersion->getVersion()->get()) {
+		if ($bundleVersion->getInstalledVersion()->asString() == $bundleVersion->getVersion()->asString()) {
 			return $bundleVersion->getInstalledVersion();
 		}
 

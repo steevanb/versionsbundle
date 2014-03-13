@@ -37,7 +37,7 @@ class DoctrineType extends Type
 	 */
 	public function convertToDatabaseValue($value, AbstractPlatform $platform)
 	{
-		return ($value === null) ? null : $value->get();
+		return ($value === null) ? null : $value->asString();
 	}
 
 	/**

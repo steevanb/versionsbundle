@@ -50,10 +50,10 @@ class InstallCommand extends ContainerAwareCommand
 		// install
 		$output->write('[<comment>' . $name . '</comment>] Installing ... ');
 		$installedVersion = $this->getContainer()->get('bundle.installer')->install($name);
-		$output->writeln('<info>' . $installedVersion->get() . '</info> installed.');
+		$output->writeln('<info>' . $installedVersion->asString() . '</info> installed.');
 
 		// update
-		if ($installedVersion->get() != $bundleVersion->getVersion()->get()) {
+		if ($installedVersion->asString() != $bundleVersion->getVersion()->asString()) {
 			$this->_command($output, 'bundle:update', array('name' => $name));
 		}
 	}

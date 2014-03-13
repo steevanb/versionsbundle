@@ -38,14 +38,14 @@ class UpdateCommand extends ContainerAwareCommand
 		}
 
 		// already up to date
-		if ($bundleVersion->getVersion()->get() == $bundleVersion->getInstalledVersion()->get()) {
-			$output->writeln('[<comment>' . $name . '</comment>] Already up to date : <info>' . $bundleVersion->getVersion()->get() . '</info>');
+		if ($bundleVersion->getVersion()->asString() == $bundleVersion->getInstalledVersion()->asString()) {
+			$output->writeln('[<comment>' . $name . '</comment>] Already up to date : <info>' . $bundleVersion->getVersion()->asString() . '</info>');
 
 			// update it
 		} else {
-			$output->write('[<comment>' . $name . '</comment>] Updating from ' . $bundleVersion->getInstalledVersion()->get() . ' to ' . $bundleVersion->getVersion()->get() . ' ... ');
+			$output->write('[<comment>' . $name . '</comment>] Updating from ' . $bundleVersion->getInstalledVersion()->asString() . ' to ' . $bundleVersion->getVersion()->asString() . ' ... ');
 			$newVersion = $this->getContainer()->get('bundle.installer')->update($name);
-			$output->writeln('<info>' . $newVersion->get() . '</info> installed.');
+			$output->writeln('<info>' . $newVersion->asString() . '</info> installed.');
 		}
 	}
 
