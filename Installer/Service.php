@@ -69,16 +69,19 @@ class Service
 	 * Install
 	 *
 	 * @param string $bundle
+	 * @param boolean $force Force installation
 	 * @throws \Exception
 	 */
-	public function install($bundle)
+	public function install($bundle, $force = false)
 	{
 		$manager = $this->container->get('doctrine')->getEntityManager();
-		$bundleVersion = $this->_getBundleVersion($bundle);
+		if ($force == false) {
+			$bundleVersion = $this->_getBundleVersion($bundle);
 
-		// already installed
-		if ($bundleVersion->isInstalled()) {
-			throw new \Exception('Bundle "' . $bundle . '" is already installed.');
+			// already installed
+			if ($bundleVersion->isInstalled()) {
+				throw new \Exception('Bundle "' . $bundle . '" is already installed.');
+			}
 		}
 
 		$service = $this->_getService($bundle, 'install');
@@ -92,6 +95,10 @@ class Service
 			if (!$installedVersion instanceof Version) {
 				throw new \Exception('Service "' . get_class($service) . '" install method must return an instance of kujaff\VersionsBundle\Versions\Version.');
 			}
+
+			if ($force == true) {
+				$bundleVersion = $this->_getBundleVersion($bundle);
+			}
 			$bundleVersion->setInstalledVersion($installedVersion);
 			$bundleVersion->setInstallationDate(new \DateTime());
 			$manager->persist($bundleVersion);
@@ -100,6 +107,9 @@ class Service
 		}
 
 		// no install service for this bundle, assume we installed the latest version
+		if ($force == true) {
+			$bundleVersion = $this->_getBundleVersion($bundle);
+		}
 		$bundleVersion->setInstalledVersion($bundleVersion->getVersion());
 		$bundleVersion->setInstallationDate(new \DateTime());
 		$manager->persist($bundleVersion);

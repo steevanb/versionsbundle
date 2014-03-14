@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Installation after schema update
@@ -22,6 +23,7 @@ class InstallCommand extends ContainerAwareCommand
 			->setName('bundle:install')
 			->setDescription('Install a bundle')
 			->addArgument('name', InputArgument::REQUIRED)
+			->addOption('force')
 		;
 	}
 
@@ -45,14 +47,14 @@ class InstallCommand extends ContainerAwareCommand
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		$name = $input->getArgument('name');
-		$bundleVersion = $this->getContainer()->get('bundle.version')->getBundleVersion($name);
 
 		// install
 		$output->write('[<comment>' . $name . '</comment>] Installing ... ');
-		$installedVersion = $this->getContainer()->get('bundle.installer')->install($name);
+		$installedVersion = $this->getContainer()->get('bundle.installer')->install($name, $input->getOption('force'));
 		$output->writeln('<info>' . $installedVersion->asString() . '</info> installed.');
 
 		// update
+		$bundleVersion = $this->getContainer()->get('bundle.version')->getBundleVersion($name);
 		if ($installedVersion->asString() != $bundleVersion->getVersion()->asString()) {
 			$this->_command($output, 'bundle:update', array('name' => $name));
 		}
