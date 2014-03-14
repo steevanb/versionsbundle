@@ -4,6 +4,7 @@ namespace kujaff\VersionsBundle\Install;
 use kujaff\VersionsBundle\Installer\Install as BaseInstall;
 use kujaff\VersionsBundle\Installer\Uninstall;
 use kujaff\VersionsBundle\Installer\UpdateMethods;
+use kujaff\VersionsBundle\Versions\Version;
 
 class Install extends UpdateMethods implements BaseInstall, Uninstall
 {
@@ -26,6 +27,8 @@ class Install extends UpdateMethods implements BaseInstall, Uninstall
 				PRIMARY KEY (`id`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
 		');
+
+		return new Version('1.0.0');
 	}
 
 	public function uninstall()
