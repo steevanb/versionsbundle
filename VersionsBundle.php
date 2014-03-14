@@ -1,16 +1,21 @@
 <?php
 namespace kujaff\VersionsBundle;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use kujaff\VersionsBundle\Versions\VersionnedBundle;
 use kujaff\VersionsBundle\DependencyInjection\Compiler\TaggedServicesPass;
+use kujaff\VersionsBundle\Versions\Version;
 
-class VersionsBundle extends Bundle
+class VersionsBundle extends VersionnedBundle
 {
+
+	public function __construct()
+	{
+		$this->version = new Version('1.0.0');
+	}
 
 	public function build(\Symfony\Component\DependencyInjection\ContainerBuilder $container)
 	{
 		parent::build($container);
-
 		$container->addCompilerPass(new TaggedServicesPass());
 	}
 
