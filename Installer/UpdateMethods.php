@@ -60,7 +60,7 @@ abstract class UpdateMethods implements Update
 	 */
 	protected function _executeDQL($dql, $parameters = array())
 	{
-		$em = $this->container->get('doctrine')->getEntityManager();
+		$em = $this->container->get('doctrine')->getManager();
 		$query = $em->createQuery($dql);
 		foreach ($parameters as $name => $value) {
 			$query->setParameter($name, $value);
@@ -76,7 +76,7 @@ abstract class UpdateMethods implements Update
 	 */
 	protected function _executeSQL($sql, $parameters = array())
 	{
-		$em = $this->container->get('doctrine')->getEntityManager();
+		$em = $this->container->get('doctrine')->getManager();
 		$stmt = $em->getConnection()->prepare($sql);
 		foreach ($parameters as $name => $value) {
 			$stmt->bindValue($name, $value);

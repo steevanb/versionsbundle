@@ -74,7 +74,7 @@ class Service
 	 */
 	public function install($bundle, $force = false)
 	{
-		$manager = $this->container->get('doctrine')->getEntityManager();
+		$manager = $this->container->get('doctrine')->getManager();
 		if ($force == false) {
 			$bundleVersion = $this->_getBundleVersion($bundle);
 
@@ -149,7 +149,7 @@ class Service
 
 		$bundleVersion->setInstalledVersion($installedVersion);
 		$bundleVersion->setUpdateDate(new \DateTime());
-		$this->container->get('doctrine')->getEntityManager()->flush();
+		$this->container->get('doctrine')->getManager()->flush();
 
 		return $installedVersion;
 	}
@@ -162,7 +162,7 @@ class Service
 	 */
 	public function uninstall($bundle)
 	{
-		$manager = $this->container->get('doctrine')->getEntityManager();
+		$manager = $this->container->get('doctrine')->getManager();
 		$bundleVersion = $this->_getBundleVersion($bundle);
 		if ($bundleVersion->isInstalled() == false) {
 			throw new \Exception('Bundle "' . $bundle . '" is not installed.');
