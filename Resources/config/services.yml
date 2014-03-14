@@ -7,3 +7,10 @@ services:
     bundle.installer:
         class: kujaff\VersionsBundle\Installer\Service
         arguments: [@service_container]
+        
+    versionsbundle.install:
+        class: kujaff\VersionsBundle\Install\Install
+        arguments: [ @service_container ]
+        tags:
+            - { name: bundle.install }
+            - { name: bundle.uninstall }
