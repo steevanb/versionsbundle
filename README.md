@@ -97,8 +97,8 @@ Create the service who implements Install :
 		}
 	}
 
-Create an update script by implementing Update
-==============================================
+Create an update script
+=======================
 
 Declare a service with tag bundle.update :
 
@@ -134,66 +134,42 @@ Create the service who implements Update :
 		}
 	}
 
-Create an update script by extending UpdateMethods
-==================================================
+Extends EasyInstaller to make your installer easiest
+====================================================
 
-An easiest way to create updates for your bundle is to create a service with tag bundle.install, who extends UpdateMethods.
+An easiest way to create install / updates / uninstall for your bundle is to create a service who extends EasyInstaller.
+You just need to add @service_container in parameters for your service :
+	
+	# MyBundle/Resources/config/services.yml
+	services :
+		mybundle.installer:
+		class: MyBundle\Installer\Installer
+		arguments: [ @service_container ]
+		tags:
+			- { name: bundle.install }
+			- { name: bundle.update }
+			- { name: bundle.uninstall }
 
-Each methods prefixed by 'update_' will be parsed to see if we need to call it for the current update.
 
-If a version doesn't need a patch, don't create an empty method, it's useless.
+Available methods :
 
-Example :
+	_executeDSL($sql, $parameters = array())
+		Execute a DQL query, with parameters
+		
+	_executeSQL($sql, $parameters = array())
+		Execute a SQL query, with parameters
+	
+	_updateOneVersionOneMethod(Update $updater, BundleVersion $bundleVersion)
+		Call it from your update method, like $this->_updateOneVersionOneMethod($this, $bundleVersion);
+		Each methods prefixed by 'update_' will be parsed to see if we need to call it for the current update.
+		If a version doesn't need a patch, don't create an empty method, it's useless.
+		Example :
+			-> Current bundle installed version : 1.0.0
+			-> Current bundle files version : 1.0.3
+			1) Try to find a method named update_1_0_1 to update bundle from 1.0.0 to 1.0.1
+			2) Try to find a method named update_1_0_2 to update bundle from 1.0.1 to 1.0.2
+			3) Try to find a method named update_1_0_3 to update bundle from 1.0.2 to 1.0.3
 
-	-> Current bundle installed version : 1.0.0
-	-> Current bundle files version : 1.0.3
-	1) Try to find a method named update_1_0_1 to update bundle from 1.0.0 to 1.0.1
-	2) Try to find a method named update_1_0_2 to update bundle from 1.0.1 to 1.0.2
-	3) Try to find a method named update_1_0_3 to update bundle from 1.0.2 to 1.0.3
-
-Declare a service with tag bundle.update :
-
-    # MyBundle/Resources/config/services.yml
-    services :
-        mybundle.updater:
-            class: MyBundle\Installer\Update
-            arguments: [ @service_container ]
-            tags:
-                - { name: bundle.update }
-
-Create the service who extends UpdateMethods :
-
-	# MyBundle/Installer/Update.php
-	namespace MyBundle/Installer;
-
-	use kujaff\VersionsBundle\Installer\UpdateMethods;
-	use kujaff\VersionsBundle\Versions\Version;
-	use kujaff\VersionsBundle\Versions\BundleVersion;
-
-	class Update extends UpdateMethods
-	{
-		public function __construct(ContainerInterface $container)
-		{
-			parent::__construct($container);
-			// call findUpdateMethods to parse your class and find methods prefixed by update_
-			$this->_findUpdateMethods($this);
-		}
-
-		public function getBundleName()
-		{
-			return 'MyBundle';
-		}
-
-		public function update_1_0_1()
-		{
-			// called when version is inferior to 1.0.1, to update it to 1.0.1
-		}
-
-		public function update_1_0_3()
-		{
-			// called when version is inferior to 1.0.3, to update it to 1.0.3
-		}
-	}
 
 Create an uninstall script
 ==========================
@@ -277,3 +253,10 @@ Or you can use Version service :
 	# getInstalledVersion() is the installed version
 	# see VersionnedBundle for other methods
 	$container->get('bundle.version')->getBundleVersion('MyBundle');
+
+Get all versionned bundles informations
+=======================================
+
+You can use SF2 console :
+
+	php app/console bundle:list
