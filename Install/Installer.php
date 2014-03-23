@@ -33,7 +33,7 @@ class Installer extends EasyInstaller implements Install, Uninstall
 
 	public function uninstall()
 	{
-		$this->_executeSQL('DROP TABLE IF EXISTS versions_bundles');
+		$this->_dropTables(array('versions_bundles'));
 	}
 
 }

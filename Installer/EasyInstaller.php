@@ -102,4 +102,16 @@ abstract class EasyInstaller
 		return $bundleVersion->getVersion();
 	}
 
+	/**
+	 * Drop tables if exists
+	 *
+	 * @param array $tables
+	 */
+	protected function _dropTables($tables = array())
+	{
+		foreach ($tables as $table) {
+			$this->_executeSQL('DROP TABLE IF EXISTS ' . $table);
+		}
+	}
+
 }
