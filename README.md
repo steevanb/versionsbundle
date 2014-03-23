@@ -237,6 +237,7 @@ Uninstall a bundle
 You can use SF2 console :
 	
 	php app/console bundle:uninstall MyBundle
+	php app/console bundle:uninstall MyBundle --force
 
 Or you can use Installer service :
 	
