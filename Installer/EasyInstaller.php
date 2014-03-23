@@ -66,11 +66,10 @@ abstract class EasyInstaller
 
 	/**
 	 * Find update methods (syntax : update_X_Y_Z)
-	 * Call it from constructor of your Updater service, with $this as $object parameter
 	 *
-	 * @param UpdateMethods $object
+	 * @param Update $object
 	 */
-	protected function _findUpdateMethods(UpdateMethods $object)
+	private function _findUpdateMethods(Update $object)
 	{
 		$return = array();
 		foreach (get_class_methods(get_class($object)) as $method) {
