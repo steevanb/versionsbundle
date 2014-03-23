@@ -19,7 +19,7 @@ class UninstallCommand extends ContainerAwareCommand
 	{
 		$this
 			->setName('bundle:uninstall')
-			->setDescription('Uninstall a bundle')
+			->setDescription('Uninstall a bundle, use --force to force uninstall although bundle is not installed')
 			->addArgument('name', InputArgument::REQUIRED)
 			->addOption('force')
 		;
