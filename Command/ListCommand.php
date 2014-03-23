@@ -27,11 +27,11 @@ class ListCommand extends ContainerAwareCommand
 	 */
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-		$output->writeln('<comment>Bundle</comment>                    <comment>Files</comment>      <comment>Installed</comment>  <comment>Installation</comment>         <comment>Last update</comment>');
+		$output->writeln('<comment>Bundle</comment>                         <comment>Files</comment>      <comment>Installed</comment>  <comment>Installation</comment>         <comment>Last update</comment>');
 
 		$bundles = $this->getContainer()->get('bundle.version')->getVersionnedBundles();
 		foreach ($bundles as $bundleVersion) {
-			$name = sprintf('%-25s', $bundleVersion->getName());
+			$name = sprintf('%-30s', $bundleVersion->getName());
 			$version = sprintf('%-10s', $bundleVersion->getVersion()->asString());
 			if ($bundleVersion->isInstalled()) {
 				$installedVersion = sprintf('%-10s', $bundleVersion->getInstalledVersion()->asString());

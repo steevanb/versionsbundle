@@ -8,8 +8,8 @@ services:
         class: kujaff\VersionsBundle\Installer\Service
         arguments: [@service_container]
         
-    versionsbundle.install:
-        class: kujaff\VersionsBundle\Install\Install
+    versionsbundle.installer:
+        class: kujaff\VersionsBundle\Install\Installer
         arguments: [ @service_container ]
         tags:
             - { name: bundle.install }

@@ -1,12 +1,12 @@
 <?php
 namespace kujaff\VersionsBundle\Install;
 
-use kujaff\VersionsBundle\Installer\Install as BaseInstall;
+use kujaff\VersionsBundle\Installer\EasyInstaller;
+use kujaff\VersionsBundle\Installer\Install;
 use kujaff\VersionsBundle\Installer\Uninstall;
-use kujaff\VersionsBundle\Installer\UpdateMethods;
 use kujaff\VersionsBundle\Versions\Version;
 
-class Install extends UpdateMethods implements BaseInstall, Uninstall
+class Installer extends EasyInstaller implements Install, Uninstall
 {
 
 	public function getBundleName()
