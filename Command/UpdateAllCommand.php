@@ -44,7 +44,7 @@ class UpdateAllCommand extends ContainerAwareCommand
 	{
 		$bundles = $this->getContainer()->get('bundle.version')->getVersionnedBundles();
 		foreach ($bundles as $bundleVersion) {
-			if ($bundleVersion->needUpdate()) {
+			if ($bundleVersion->isInstalled() && $bundleVersion->needUpdate()) {
 				$this->_command($output, 'bundle:update', array('name' => $bundleVersion->getName()));
 			}
 		}
