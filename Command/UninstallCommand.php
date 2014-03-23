@@ -21,6 +21,7 @@ class UninstallCommand extends ContainerAwareCommand
 			->setName('bundle:uninstall')
 			->setDescription('Uninstall a bundle')
 			->addArgument('name', InputArgument::REQUIRED)
+			->addOption('force')
 		;
 	}
 
@@ -30,9 +31,10 @@ class UninstallCommand extends ContainerAwareCommand
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		$name = $input->getArgument('name');
+		$force = $input->getOption('force');
 
 		$output->write('[<comment>' . $name . '</comment>] Uninstalling ...');
-		$this->getContainer()->get('bundle.installer')->uninstall($name);
+		$this->getContainer()->get('bundle.installer')->uninstall($name, $force);
 		$output->write(' <info>Done</info>', true);
 	}
 

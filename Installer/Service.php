@@ -158,13 +158,14 @@ class Service
 	 * Uninstall
 	 *
 	 * @param string $bundle
+	 * @param boolean $force Force uninstall, although it's not installed
 	 * @throws \Exception
 	 */
-	public function uninstall($bundle)
+	public function uninstall($bundle, $force = false)
 	{
 		$manager = $this->container->get('doctrine')->getManager();
 		$bundleVersion = $this->_getBundleVersion($bundle);
-		if ($bundleVersion->isInstalled() == false) {
+		if ($force == false && $bundleVersion->isInstalled() == false) {
 			throw new \Exception('Bundle "' . $bundle . '" is not installed.');
 		}
 
