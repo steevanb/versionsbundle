@@ -169,6 +169,9 @@ Available methods :
 			1) Try to find a method named update_1_0_1 to update bundle from 1.0.0 to 1.0.1
 			2) Try to find a method named update_1_0_2 to update bundle from 1.0.1 to 1.0.2
 			3) Try to find a method named update_1_0_3 to update bundle from 1.0.2 to 1.0.3
+			
+	_dropTables(array $tables)
+		Drop tables only if exists (DROP TABLE IF EXISTS)
 
 
 Create an uninstall script
