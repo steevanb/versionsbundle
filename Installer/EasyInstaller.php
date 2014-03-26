@@ -76,7 +76,7 @@ abstract class EasyInstaller
 			if (substr($method, 0, 7) == 'update_') {
 				$version = substr($method, 7);
 				if (preg_match('/[0-9]{1,}[_]{1}[0-9]{1,}[_]{1}[0-9]{1,}/', $version)) {
-					$this->patchs[] = str_replace('_', '.', $version);
+					$return[] = str_replace('_', '.', $version);
 				}
 			}
 		}
