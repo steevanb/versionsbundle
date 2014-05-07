@@ -6,7 +6,7 @@ Add version information to your bundles, with install, updates, uninstall
 Installation
 ============
 
-See [installation.md](documentation/installation.md)
+See [installation.md](Documentation/installation.md)
 
 Composer :
 ```json
