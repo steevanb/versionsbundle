@@ -12,8 +12,11 @@ Make your bundle versionned
 ===========================
 
 To add your bundle to versionned bundle list : [Make versionned.md](Documentation/Make bundle versionned.md)
+
 To create an install script : [Install script.md](Documentation/Install script.md)
+
 To create an update script : [Update script.md](Documentation/Update script.md)
+
 To create an uninstall script : [Uninstall script.md](Documentation/Uninstall script.md)
 
 Use EasyInstaller to make install, update and uninstall easy : [EasyInstaller.md](Documentation/EasyInstaller.md)
