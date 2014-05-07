@@ -18,7 +18,7 @@ Composer :
 
 Add bundle to your AppKernel :
 ```php
-// app/AppKernel.php
+# app/AppKernel.php
 class AppKernel extends Kernel
 {
     public function registerBundles()
@@ -69,76 +69,79 @@ Create an install script
 ========================
 
 Declare a service with tag bundle.install :
-
-    # MyBundle/Resources/config/services.yml
-    services :
-        mybundle.installer:
-            class: MyBundle\Installer\Install
-            tags:
-                - { name: bundle.install }
+```yml
+# MyBundle/Resources/config/services.yml
+services :
+    mybundle.installer:
+        class: MyBundle\Installer\Install
+        tags:
+            - { name: bundle.install }
+```yml
 
 Create the service who implements Install :
+```php
+# MyBundle/Installer/Install.php
+namespace MyBundle/Installer;
 
-	# MyBundle/Installer/Install.php
-	namespace MyBundle/Installer;
+use kujaff\VersionsBundle\Installer\Install as BaseInstall;
+use kujaff\VersionsBundle\Versions\Version;
 
-	use kujaff\VersionsBundle\Installer\Install as BaseInstall;
-	use kujaff\VersionsBundle\Versions\Version;
+class Install implements BaseInstall
+{
+    public function getBundleName()
+    {
+        return 'MyBundle';
+    }
 
-	class Install implements BaseInstall
-	{
-		public function getBundleName()
-		{
-			return 'MyBundle';
-		}
-
-		public function install()
-		{
-			// make stuff to install your bundle, like creating dirs, updating database schema, etc
-			// and then return the version when installation is done
-			// most of the time it will NOT be the bundle version, it's the version when THIS script is done
-			// an update will be performed after the installation to update to the bundle version
-			return new Version('1.0.0');
-		}
-	}
+    public function install()
+    {
+        // make stuff to install your bundle, like creating dirs, updating database schema, etc
+        // and then return the version when installation is done
+        // most of the time it will NOT be the bundle version, it's the version when THIS script is done
+        // an update will be performed after the installation to update to the bundle version
+        return new Version('1.0.0');
+    }
+}
+```
 
 Create an update script
 =======================
 
 Declare a service with tag bundle.update :
-
-    # MyBundle/Resources/config/services.yml
-    services :
-        mybundle.updater:
-            class: MyBundle\Installer\Update
-            tags:
-                - { name: bundle.update }
+```yml
+# MyBundle/Resources/config/services.yml
+services :
+    mybundle.updater:
+        class: MyBundle\Installer\Update
+        tags:
+            - { name: bundle.update }
+```
 
 Create the service who implements Update :
+```php
+# MyBundle/Installer/Update.php
+namespace MyBundle/Installer;
 
-	# MyBundle/Installer/Update.php
-	namespace MyBundle/Installer;
+use kujaff\VersionsBundle\Installer\Update as BaseUpdate;
+use kujaff\VersionsBundle\Versions\Version;
+use kujaff\VersionsBundle\Versions\BundleVersion;
 
-	use kujaff\VersionsBundle\Installer\Update as BaseUpdate;
-	use kujaff\VersionsBundle\Versions\Version;
-	use kujaff\VersionsBundle\Versions\BundleVersion;
+class Update implements BaseUpdate
+{
+    public function getBundleName()
+    {
+        return 'MyBundle';
+    }
 
-	class Update implements BaseUpdate
-	{
-		public function getBundleName()
-		{
-			return 'MyBundle';
-		}
-
-		public function update(BundleVersion $bundleVersion)
-		{
-			// make stuff to update your bundle, like creating dirs, updating database schema, etc
-			// and then return the version when update is done
-			// to get the installed version, see $bundleVersion->getInstalledVersion()
-			return new Version('1.0.3');
-		}
-	}
-
+    public function update(BundleVersion $bundleVersion)
+    {
+        // make stuff to update your bundle, like creating dirs, updating database schema, etc
+        // and then return the version when update is done
+        // to get the installed version, see $bundleVersion->getInstalledVersion()
+        return new Version('1.0.3');
+    }
+}
+```
 
 Create an uninstall script
 ==========================
