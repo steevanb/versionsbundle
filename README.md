@@ -76,7 +76,7 @@ services :
         class: MyBundle\Installer\Install
         tags:
             - { name: bundle.install }
-```yml
+```
 
 Create the service who implements Install :
 ```php
