@@ -9,60 +9,64 @@ Installation
 Composer :
 
 ```json
-    # composer.json
-    {
-        "require": {
-            "kujaff/versionsbundle": "dev-master"
-        }
+# composer.json
+{
+    "require": {
+        "kujaff/versionsbundle": "dev-master"
     }
+}
 ```
 
 Add bundle to your AppKernel :
 
 ```php
-    // app/AppKernel.php
-    class AppKernel extends Kernel
+// app/AppKernel.php
+class AppKernel extends Kernel
+{
+    public function registerBundles()
     {
-        public function registerBundles()
-        {
-            $bundles = array(
-                // -----
-                new kujaff\VersionsBundle\VersionsBundle(),
-            );
-        }
+        $bundles = array(
+            // -----
+            new kujaff\VersionsBundle\VersionsBundle(),
+        );
     }
+}
 ```
 
 Add version type in your Doctrine config :
 
-    # app/config/config.yml
-    doctrine:
-        dbal:
-            types:
-                version: kujaff\VersionsBundle\Versions\DoctrineType
+```yml
+# app/config/config.yml
+doctrine:
+    dbal:
+        types:
+            version: kujaff\VersionsBundle\Versions\DoctrineType
+```
 
 Make your bundle versionned
 ============================
 
 Make your bundle versionned by extending VersionnedBundle instead of Bundle :
 
-    # MyBundle/MyBundle.php
-    use kujaff\VersionsBundle\Versions\VersionnedBundle;
-    use kujaff\VersionsBundle\Versions\Version;
+```php
+# MyBundle/MyBundle.php
+use kujaff\VersionsBundle\Versions\VersionnedBundle;
+use kujaff\VersionsBundle\Versions\Version;
 
-    class MyBundle extends VersionnedBundle
+class MyBundle extends VersionnedBundle
+{
+    public function __construct()
     {
-        public function __construct()
-        {
-            $this->version = new Version('1.0.0');
-            # indicate if bundle needs to be installed or if it can be used without installation, true by default
-            # a bundle not installed and required to be throws a kujaff\VersionsBundle\Versions\Exception at bundle boot
-            $this->needInstallation = true;
-            # indicate if bundle needs to be up to date or if it can be used without being up to date, true by default
-            # a bundle not updated and required to be throws a kujaff\VersionsBundle\Versions\Exception at bundle boot
-            $this->needUpToDate = true;
-        }
+        $this->version = new Version('1.0.0');
+        # indicate if bundle needs to be installed or if it can be used without installation, true by default
+        # a bundle not installed and required to be throws a kujaff\VersionsBundle\Versions\Exception at bundle boot
+        $this->needInstallation = true;
+        # indicate if bundle needs to be up to date or if it can be used without being up to date, true by default
+        # a bundle not updated and required to be throws a kujaff\VersionsBundle\Versions\Exception at bundle boot
+        $this->needUpToDate = true;
     }
+}
+```
 
 Create an install script
 ========================
