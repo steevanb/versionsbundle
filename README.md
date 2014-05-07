@@ -8,16 +8,19 @@ Installation
 
 Composer :
 
+```json
     # composer.json
     {
         "require": {
             "kujaff/versionsbundle": "dev-master"
         }
     }
+```
 
 Add bundle to your AppKernel :
 
-    # app/AppKernel.php
+```php
+    // app/AppKernel.php
     class AppKernel extends Kernel
     {
         public function registerBundles()
@@ -28,6 +31,7 @@ Add bundle to your AppKernel :
             );
         }
     }
+```
 
 Add version type in your Doctrine config :
 
