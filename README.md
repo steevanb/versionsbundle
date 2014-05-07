@@ -7,133 +7,141 @@ Installation
 ============
 
 Composer :
-
-    # composer.json
-    {
-        "require": {
-            "kujaff/versionsbundle": "dev-master"
-        }
+```json
+# composer.json
+{
+    "require": {
+        "kujaff/versionsbundle": "dev-master"
     }
+}
+```
 
 Add bundle to your AppKernel :
-
-    # app/AppKernel.php
-    class AppKernel extends Kernel
+```php
+# app/AppKernel.php
+class AppKernel extends Kernel
+{
+    public function registerBundles()
     {
-        public function registerBundles()
-        {
-            $bundles = array(
-                // -----
-                new kujaff\VersionsBundle\VersionsBundle(),
-            );
-        }
+        $bundles = array(
+            // -----
+            new kujaff\VersionsBundle\VersionsBundle(),
+        );
     }
+}
+```
 
 Add version type in your Doctrine config :
-
-    # app/config/config.yml
-    doctrine:
-        dbal:
-            types:
-                version: kujaff\VersionsBundle\Versions\DoctrineType
+```yml
+# app/config/config.yml
+doctrine:
+    dbal:
+        types:
+            version: kujaff\VersionsBundle\Versions\DoctrineType
+```
 
 Make your bundle versionned
 ============================
 
 Make your bundle versionned by extending VersionnedBundle instead of Bundle :
 
-    # MyBundle/MyBundle.php
-    use kujaff\VersionsBundle\Versions\VersionnedBundle;
-    use kujaff\VersionsBundle\Versions\Version;
+```php
+# MyBundle/MyBundle.php
+use kujaff\VersionsBundle\Versions\VersionnedBundle;
+use kujaff\VersionsBundle\Versions\Version;
 
-    class MyBundle extends VersionnedBundle
+class MyBundle extends VersionnedBundle
+{
+    public function __construct()
     {
-        public function __construct()
-        {
-            $this->version = new Version('1.0.0');
-            # indicate if bundle needs to be installed or if it can be used without installation, true by default
-            # a bundle not installed and required to be throws a kujaff\VersionsBundle\Versions\Exception at bundle boot
-            $this->needInstallation = true;
-            # indicate if bundle needs to be up to date or if it can be used without being up to date, true by default
-            # a bundle not updated and required to be throws a kujaff\VersionsBundle\Versions\Exception at bundle boot
-            $this->needUpToDate = true;
-        }
+        $this->version = new Version('1.0.0');
+        # indicate if bundle needs to be installed or if it can be used without installation, true by default
+        # a bundle not installed and required to be throws a kujaff\VersionsBundle\Versions\Exception at bundle boot
+        $this->needInstallation = true;
+        # indicate if bundle needs to be up to date or if it can be used without being up to date, true by default
+        # a bundle not updated and required to be throws a kujaff\VersionsBundle\Versions\Exception at bundle boot
+        $this->needUpToDate = true;
     }
+}
+```
 
 Create an install script
 ========================
 
 Declare a service with tag bundle.install :
-
-    # MyBundle/Resources/config/services.yml
-    services :
-        mybundle.installer:
-            class: MyBundle\Installer\Install
-            tags:
-                - { name: bundle.install }
+```yml
+# MyBundle/Resources/config/services.yml
+services :
+    mybundle.installer:
+        class: MyBundle\Installer\Install
+        tags:
+            - { name: bundle.install }
+```
 
 Create the service who implements Install :
+```php
+# MyBundle/Installer/Install.php
+namespace MyBundle/Installer;
 
-	# MyBundle/Installer/Install.php
-	namespace MyBundle/Installer;
+use kujaff\VersionsBundle\Installer\Install as BaseInstall;
+use kujaff\VersionsBundle\Versions\Version;
 
-	use kujaff\VersionsBundle\Installer\Install as BaseInstall;
-	use kujaff\VersionsBundle\Versions\Version;
+class Install implements BaseInstall
+{
+    public function getBundleName()
+    {
+        return 'MyBundle';
+    }
 
-	class Install implements BaseInstall
-	{
-		public function getBundleName()
-		{
-			return 'MyBundle';
-		}
-
-		public function install()
-		{
-			// make stuff to install your bundle, like creating dirs, updating database schema, etc
-			// and then return the version when installation is done
-			// most of the time it will NOT be the bundle version, it's the version when THIS script is done
-			// an update will be performed after the installation to update to the bundle version
-			return new Version('1.0.0');
-		}
-	}
+    public function install()
+    {
+        // make stuff to install your bundle, like creating dirs, updating database schema, etc
+        // and then return the version when installation is done
+        // most of the time it will NOT be the bundle version, it's the version when THIS script is done
+        // an update will be performed after the installation to update to the bundle version
+        return new Version('1.0.0');
+    }
+}
+```
 
 Create an update script
 =======================
 
 Declare a service with tag bundle.update :
-
-    # MyBundle/Resources/config/services.yml
-    services :
-        mybundle.updater:
-            class: MyBundle\Installer\Update
-            tags:
-                - { name: bundle.update }
+```yml
+# MyBundle/Resources/config/services.yml
+services :
+    mybundle.updater:
+        class: MyBundle\Installer\Update
+        tags:
+            - { name: bundle.update }
+```
 
 Create the service who implements Update :
+```php
+# MyBundle/Installer/Update.php
+namespace MyBundle/Installer;
 
-	# MyBundle/Installer/Update.php
-	namespace MyBundle/Installer;
+use kujaff\VersionsBundle\Installer\Update as BaseUpdate;
+use kujaff\VersionsBundle\Versions\Version;
+use kujaff\VersionsBundle\Versions\BundleVersion;
 
-	use kujaff\VersionsBundle\Installer\Update as BaseUpdate;
-	use kujaff\VersionsBundle\Versions\Version;
-	use kujaff\VersionsBundle\Versions\BundleVersion;
+class Update implements BaseUpdate
+{
+    public function getBundleName()
+    {
+        return 'MyBundle';
+    }
 
-	class Update implements BaseUpdate
-	{
-		public function getBundleName()
-		{
-			return 'MyBundle';
-		}
-
-		public function update(BundleVersion $bundleVersion)
-		{
-			// make stuff to update your bundle, like creating dirs, updating database schema, etc
-			// and then return the version when update is done
-			// to get the installed version, see $bundleVersion->getInstalledVersion()
-			return new Version('1.0.3');
-		}
-	}
-
+    public function update(BundleVersion $bundleVersion)
+    {
+        // make stuff to update your bundle, like creating dirs, updating database schema, etc
+        // and then return the version when update is done
+        // to get the installed version, see $bundleVersion->getInstalledVersion()
+        return new Version('1.0.3');
+    }
+}
+```
 
 Create an uninstall script
 ==========================
