@@ -7,7 +7,6 @@ Installation
 ============
 
 Composer :
-
 ```json
 # composer.json
 {
@@ -18,7 +17,6 @@ Composer :
 ```
 
 Add bundle to your AppKernel :
-
 ```php
 // app/AppKernel.php
 class AppKernel extends Kernel
@@ -34,7 +32,6 @@ class AppKernel extends Kernel
 ```
 
 Add version type in your Doctrine config :
-
 ```yml
 # app/config/config.yml
 doctrine:
