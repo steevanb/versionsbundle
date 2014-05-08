@@ -1,6 +1,6 @@
 Composer :
 ```json
-/* composer.json */
+// composer.json
 {
     "require": {
         "kujaff/versionsbundle": "dev-master"
