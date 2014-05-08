@@ -42,6 +42,6 @@ php app/console bundle:uninstall MyBundle --force
 
 Or you can use Installer service :
 	
-```
+```php
 $container->get('bundle.installer')->uninstall('MyBundle');
 ```
