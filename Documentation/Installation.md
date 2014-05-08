@@ -31,3 +31,8 @@ doctrine:
         types:
             version: kujaff\VersionsBundle\Versions\DoctrineType
 ```
+
+Update your database schema :
+```php
+php app/console doctrine:schema:upate --force
+```
