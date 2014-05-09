@@ -1,6 +1,5 @@
 An easiest way to create install / updates / uninstall for your bundle is to create a service who extends EasyInstaller.
 You just need to add @service_container in parameters for your service :
-	
 ```yml
 # MyBundle/Resources/config/services.yml
 services :
@@ -14,13 +13,15 @@ services :
 ```
 
 Available methods :
-
 ```php
+// Search for bundle name in current class namespace
+public function getBundleName()
+
 // Execute a DQL query, with parameters
-_executeDQL($sql, $parameters = array())
+protected function _executeDQL($sql, $parameters = array())
 
 // Execute a SQL query, with parameters
-_executeSQL($sql, $parameters = array())
+protected function _executeSQL($sql, $parameters = array())
 	
 // Call it from your update method, like $this->_updateOneVersionOneMethod($this, $bundleVersion);
 // Each methods prefixed by 'update_' will be parsed to see if we need to call it for the current update.
@@ -31,8 +32,8 @@ _executeSQL($sql, $parameters = array())
 //    1) Try to find a method named update_1_0_1 to update bundle from 1.0.0 to 1.0.1
 //    2) Try to find a method named update_1_0_2 to update bundle from 1.0.1 to 1.0.2
 //    3) Try to find a method named update_1_0_3 to update bundle from 1.0.2 to 1.0.3
-_updateOneVersionOneMethod(Update $updater, BundleVersion $bundleVersion)
+protected function _updateOneVersionOneMethod(Update $updater, BundleVersion $bundleVersion)
 		
 // Drop tables only if exists (DROP TABLE IF EXISTS)	
-_dropTables(array $tables)
+protected function _dropTables(array $tables)
 ```

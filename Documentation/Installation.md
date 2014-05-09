@@ -32,7 +32,7 @@ doctrine:
             version: kujaff\VersionsBundle\Versions\DoctrineType
 ```
 
-Update your database schema :
+Install VersionsBundle :
 ```php
-php app/console doctrine:schema:upate --force
+php app/console bundle:install VersionsBundle --force
 ```

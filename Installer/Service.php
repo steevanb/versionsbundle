@@ -1,4 +1,5 @@
 <?php
+
 namespace kujaff\VersionsBundle\Installer;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -7,178 +8,179 @@ use kujaff\VersionsBundle\Entity\BundleVersion;
 
 class Service
 {
-	/**
-	 * @var ContainerInterface
-	 */
-	private $container;
 
-	/**
-	 * Return tagged services
-	 *
-	 * @param string $bundle
-	 * @param string $tag
-	 * @return array
-	 * @throws \Exception
-	 */
-	private function _getService($bundle, $tag)
-	{
-		$fileName = $this->container->getParameter('kernel.cache_dir') . DIRECTORY_SEPARATOR . 'services.bundle.' . $tag . '.php';
-		if (file_exists($fileName) === false) {
-			throw new \Exception('Unable to find service tagged "bundle."' . $tag . '.');
-		}
-		$serviceIds = require($fileName);
-		foreach ($serviceIds as $id) {
-			$service = $this->container->get($id);
-			if (!$service instanceof Install) {
-				throw new \Exception('Service "' . $id . '" must implements kujaff\VersionsBundle\Installer\Install.');
-			}
-			if ($service->getBundleName() == $bundle) {
-				return $service;
-			}
-		}
-		return false;
-	}
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
 
-	/**
-	 * Get bundle version, assert a version si defined
-	 *
-	 * @param string $bundle
-	 * @return BundleVersion
-	 * @throws \Exception
-	 */
-	private function _getBundleVersion($bundle)
-	{
-		$return = $this->container->get('bundle.version')->getBundleVersion($bundle);
-		if ($return->getVersion() == null) {
-			throw new \Exception('Bundle "' . $bundle . '" main class must extends kujaff\VersionsBundle\Versions\VersionnedBundle.');
-		}
-		return $return;
-	}
+    /**
+     * Return tagged services
+     *
+     * @param string $bundle
+     * @param string $tag
+     * @return array
+     * @throws \Exception
+     */
+    private function _getService($bundle, $tag)
+    {
+        $fileName = $this->container->getParameter('kernel.cache_dir') . DIRECTORY_SEPARATOR . 'services.bundle.' . $tag . '.php';
+        if (file_exists($fileName) === false) {
+            throw new \Exception('Unable to find service tagged "bundle."' . $tag . '.');
+        }
 
-	/**
-	 * Constructor
-	 *
-	 * @param ContainerInterface $container
-	 */
-	public function __construct(ContainerInterface $container)
-	{
-		$this->container = $container;
-	}
+        $serviceIds = require($fileName);
+        foreach ($serviceIds as $id) {
+            $service = $this->container->get($id);
+            if (!$service instanceof Install) {
+                throw new \Exception('Service "' . $id . '" must implements kujaff\VersionsBundle\Installer\Install.');
+            }
+            if ($service->getBundleName() == $bundle) {
+                return $service;
+            }
+        }
+        return false;
+    }
 
-	/**
-	 * Install
-	 *
-	 * @param string $bundle
-	 * @param boolean $force Force installation
-	 * @throws \Exception
-	 */
-	public function install($bundle, $force = false)
-	{
-		$manager = $this->container->get('doctrine')->getManager();
-		if ($force == false) {
-			$bundleVersion = $this->_getBundleVersion($bundle);
+    /**
+     * Get bundle version, assert a version si defined
+     *
+     * @param string $bundle
+     * @return BundleVersion
+     * @throws \Exception
+     */
+    private function _getBundleVersion($bundle)
+    {
+        $return = $this->container->get('bundle.version')->getBundleVersion($bundle);
+        if ($return->getVersion() == null) {
+            throw new \Exception('Bundle "' . $bundle . '" main class must extends kujaff\VersionsBundle\Versions\VersionnedBundle.');
+        }
+        return $return;
+    }
 
-			// already installed
-			if ($bundleVersion->isInstalled()) {
-				throw new \Exception('Bundle "' . $bundle . '" is already installed.');
-			}
-		}
+    /**
+     * Constructor
+     *
+     * @param ContainerInterface $container
+     */
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
 
-		$service = $this->_getService($bundle, 'install');
-		// bundle has a service to do stuff
-		if ($service !== false) {
-			if (!$service instanceof Install) {
-				throw new \Exception('Service "' . get_class($service) . '" must implements kujaff\VersionsBundle\Installer\Install.');
-			}
+    /**
+     * Install
+     *
+     * @param string $bundle
+     * @param boolean $force Force installation
+     * @throws \Exception
+     */
+    public function install($bundle, $force = false)
+    {
+        $manager = $this->container->get('doctrine')->getManager();
+        if ($force == false) {
+            $bundleVersion = $this->_getBundleVersion($bundle);
 
-			$installedVersion = $service->install();
-			if (!$installedVersion instanceof Version) {
-				throw new \Exception('Service "' . get_class($service) . '" install method must return an instance of kujaff\VersionsBundle\Versions\Version.');
-			}
+            // already installed
+            if ($bundleVersion->isInstalled()) {
+                throw new \Exception('Bundle "' . $bundle . '" is already installed.');
+            }
+        }
 
-			if ($force == true) {
-				$bundleVersion = $this->_getBundleVersion($bundle);
-			}
-			$bundleVersion->setInstalledVersion($installedVersion);
-			$bundleVersion->setInstallationDate(new \DateTime());
-			$manager->persist($bundleVersion);
-			$manager->flush();
-			return $installedVersion;
-		}
+        $service = $this->_getService($bundle, 'install');
+        // bundle has a service to do stuff
+        if ($service !== false) {
+            if (!$service instanceof Install) {
+                throw new \Exception('Service "' . get_class($service) . '" must implements kujaff\VersionsBundle\Installer\Install.');
+            }
 
-		// no install service for this bundle, assume we installed the latest version
-		if ($force == true) {
-			$bundleVersion = $this->_getBundleVersion($bundle);
-		}
-		$bundleVersion->setInstalledVersion($bundleVersion->getVersion());
-		$bundleVersion->setInstallationDate(new \DateTime());
-		$manager->persist($bundleVersion);
-		$manager->flush();
-		return $bundleVersion->getInstalledVersion();
-	}
+            $installedVersion = $service->install();
+            if (!$installedVersion instanceof Version) {
+                throw new \Exception('Service "' . get_class($service) . '" install method must return an instance of kujaff\VersionsBundle\Versions\Version.');
+            }
 
-	/**
-	 * Update
-	 *
-	 * @param string $bundle
-	 */
-	public function update($bundle)
-	{
-		$bundleVersion = $this->_getBundleVersion($bundle);
-		if ($bundleVersion->isInstalled() == false) {
-			throw new \Exception('Bundle "' . $bundle . '" is not installed.');
-		}
+            if ($force == true) {
+                $bundleVersion = $this->_getBundleVersion($bundle);
+            }
+            $bundleVersion->setInstalledVersion($installedVersion);
+            $bundleVersion->setInstallationDate(new \DateTime());
+            $manager->persist($bundleVersion);
+            $manager->flush();
+            return $installedVersion;
+        }
 
-		// already up to date
-		if ($bundleVersion->getInstalledVersion()->asString() == $bundleVersion->getVersion()->asString()) {
-			return $bundleVersion->getInstalledVersion();
-		}
+        // no install service for this bundle, assume we installed the latest version
+        if ($force == true) {
+            $bundleVersion = $this->_getBundleVersion($bundle);
+        }
+        $bundleVersion->setInstalledVersion($bundleVersion->getVersion());
+        $bundleVersion->setInstallationDate(new \DateTime());
+        $manager->persist($bundleVersion);
+        $manager->flush();
+        return $bundleVersion->getInstalledVersion();
+    }
 
-		$service = $this->_getService($bundle, 'update');
-		// an update service has be found
-		if ($service !== false) {
-			if (!$service instanceof Update) {
-				throw new \Exception('Service "' . get_class($service) . '" must implements kujaff\VersionsBundle\Installer\Update.');
-			}
-			$installedVersion = $service->update($bundleVersion);
+    /**
+     * Update
+     *
+     * @param string $bundle
+     */
+    public function update($bundle)
+    {
+        $bundleVersion = $this->_getBundleVersion($bundle);
+        if ($bundleVersion->isInstalled() == false) {
+            throw new \Exception('Bundle "' . $bundle . '" is not installed.');
+        }
 
-			// no update service, assume we have updated bundle to the latest version
-		} else {
-			$installedVersion = $bundleVersion->getVersion();
-		}
+        // already up to date
+        if ($bundleVersion->getInstalledVersion()->asString() == $bundleVersion->getVersion()->asString()) {
+            return $bundleVersion->getInstalledVersion();
+        }
 
-		$bundleVersion->setInstalledVersion($installedVersion);
-		$bundleVersion->setUpdateDate(new \DateTime());
-		$this->container->get('doctrine')->getManager()->flush();
+        $service = $this->_getService($bundle, 'update');
+        // an update service has be found
+        if ($service !== false) {
+            if (!$service instanceof Update) {
+                throw new \Exception('Service "' . get_class($service) . '" must implements kujaff\VersionsBundle\Installer\Update.');
+            }
+            $installedVersion = $service->update($bundleVersion);
 
-		return $installedVersion;
-	}
+            // no update service, assume we have updated bundle to the latest version
+        } else {
+            $installedVersion = $bundleVersion->getVersion();
+        }
 
-	/**
-	 * Uninstall
-	 *
-	 * @param string $bundle
-	 * @param boolean $force Force uninstall, although it's not installed
-	 * @throws \Exception
-	 */
-	public function uninstall($bundle, $force = false)
-	{
-		$manager = $this->container->get('doctrine')->getManager();
-		$bundleVersion = $this->_getBundleVersion($bundle);
-		if ($force == false && $bundleVersion->isInstalled() == false) {
-			throw new \Exception('Bundle "' . $bundle . '" is not installed.');
-		}
+        $bundleVersion->setInstalledVersion($installedVersion);
+        $bundleVersion->setUpdateDate(new \DateTime());
+        $this->container->get('doctrine')->getManager()->flush();
 
-		$service = $this->_getService($bundle, 'uninstall');
-		if ($service !== false) {
-			if (!$service instanceof Uninstall) {
-				throw new \Exception('Service "' . get_class($service) . '" must implements kujaff\VersionsBundle\Installer\Uninstall.');
-			}
-			$service->uninstall();
-		}
+        return $installedVersion;
+    }
 
-		$manager->remove($bundleVersion);
-		$manager->flush();
-	}
+    /**
+     * Uninstall
+     *
+     * @param string $bundle
+     * @param boolean $force Force uninstall, although it's not installed
+     * @throws \Exception
+     */
+    public function uninstall($bundle, $force = false)
+    {
+        $manager = $this->container->get('doctrine')->getManager();
+        $bundleVersion = $this->_getBundleVersion($bundle);
+        if ($force == false && $bundleVersion->isInstalled() == false) {
+            throw new \Exception('Bundle "' . $bundle . '" is not installed.');
+        }
 
+        $service = $this->_getService($bundle, 'uninstall');
+        if ($service !== false) {
+            if (!$service instanceof Uninstall) {
+                throw new \Exception('Service "' . get_class($service) . '" must implements kujaff\VersionsBundle\Installer\Uninstall.');
+            }
+            $service->uninstall();
+        }
+
+        $manager->remove($bundleVersion);
+        $manager->flush();
+    }
 }
