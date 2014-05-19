@@ -119,7 +119,7 @@ abstract class EasyInstaller
         $parts = array_reverse(explode('\\', get_called_class()));
         foreach ($parts as $part) {
             if (substr($part, -6) == 'Bundle') {
-                return substr($part, 0, -6);
+                return $part;
             }
         }
         throw \Exception('Bundle name cannot be found in "' . get_called_class() . '" class name.');
