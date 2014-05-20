@@ -1,0 +1,26 @@
+<?php
+namespace {{ namespace }};
+
+{% for use in uses %}
+use {{ use }};
+{% endfor %}
+
+/**
+ * Installer for {{ bundle }}
+ */
+class {{ className }} implements {{ implements|join(', ') }};
+{
+    use {{ traits|join(', ') }};
+    
+    /**
+     * Installation
+     *
+     * @return Version
+     */
+    public function install()
+    {
+        // do your install stuff here
+        
+        return new Version('{{ version }}');
+    }
+}

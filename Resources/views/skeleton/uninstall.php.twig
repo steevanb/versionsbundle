@@ -1,0 +1,22 @@
+<?php
+namespace {{ namespace }};
+
+{% for use in uses %}
+use {{ use }};
+{% endfor %}
+
+/**
+ * Uninstaller for {{ bundle }}
+ */
+class {{ className }} implements {{ implements|join(', ') }};
+{
+    use {{ traits|join(', ') }};
+    
+    /**
+     * Uninstall
+     */
+    public function uninstall()
+    {
+        // do your uninstall stuff here
+    }
+}

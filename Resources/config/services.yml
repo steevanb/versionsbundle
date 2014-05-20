@@ -14,3 +14,11 @@ services:
         tags:
             - { name: bundle.install }
             - { name: bundle.uninstall }
+
+    bundle.generator:
+        class: kujaff\VersionsBundle\Generator\Bundle
+        arguments: [ @service_container ]
+    
+    bundle.generator.registerService:
+        class: kujaff\VersionsBundle\Generator\RegisterService
+        arguments: [ @service_container ]
