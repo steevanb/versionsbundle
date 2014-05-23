@@ -1,4 +1,5 @@
 <?php
+
 namespace kujaff\VersionsBundle\Installer;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -8,21 +9,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 trait ContainerAware
 {
-	/**
-	 * Container
-	 *
-	 * @var ContainerInterface
-	 */
-	protected $container;
 
-	/**
-	 * Constructor
-	 *
-	 * @param ContainerInterface $container
-	 */
-	public function __construct(ContainerInterface $container)
-	{
-		$this->container = $container;
-	}
+    /**
+     * Container
+     *
+     * @var ContainerInterface
+     */
+    protected $container;
 
+    /**
+     * Constructor
+     *
+     * @param ContainerInterface $container
+     */
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
 }
