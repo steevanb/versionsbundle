@@ -1,0 +1,12 @@
+kujaff\VersionsBundle\Entity\Patch:
+    type: entity
+    table: versions_patchs
+    id:
+        bundle:
+            type: string
+            id: true
+            length: '100'
+        date:
+            type: datetime
+            id: true
+    lifecycleCallbacks: {  }

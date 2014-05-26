@@ -1,4 +1,5 @@
 <?php
+
 namespace kujaff\VersionsBundle;
 
 use kujaff\VersionsBundle\Versions\VersionnedBundle;
@@ -10,7 +11,7 @@ class VersionsBundle extends VersionnedBundle
 
 	public function __construct()
 	{
-		$this->version = new Version('1.0.0');
+		$this->version = new Version('1.1.0');
 	}
 
 	public function build(\Symfony\Component\DependencyInjection\ContainerBuilder $container)

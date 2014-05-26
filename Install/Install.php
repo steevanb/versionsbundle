@@ -8,7 +8,7 @@ use kujaff\VersionsBundle\Installer\DoctrineHelper;
 use kujaff\VersionsBundle\Installer\BundleNameFromClassName;
 use kujaff\VersionsBundle\Installer\ContainerAware;
 
-class Installer implements BaseInstall
+class Install implements BaseInstall
 {
 
 	use DoctrineHelper,

@@ -7,7 +7,7 @@ use kujaff\VersionsBundle\Installer\DoctrineHelper;
 use kujaff\VersionsBundle\Installer\BundleNameFromClassName;
 use kujaff\VersionsBundle\Installer\ContainerAware;
 
-class Installer implements BaseUninstall
+class Uninstall implements BaseUninstall
 {
 
 	use DoctrineHelper,
