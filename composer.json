@@ -10,7 +10,7 @@
     "require": {
         "php": ">=5.3.3",
         "symfony/symfony": "~2.3",
-        "kujaff/doctrinebundle": "dev-master"
+        "kujaff/doctrinebundle": "1.0.x"
     },
     "target-dir": "kujaff/VersionsBundle",
     "repositories": [
