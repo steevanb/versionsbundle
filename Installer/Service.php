@@ -174,12 +174,12 @@ class Service
             throw new InstallStateException('Bundle "' . $bundle . '" is not installed.');
         }
 
+        $version = ($version instanceof Version) ? $version : $bundleVersion->getVersion();
+
         // already up to date
-        if ($bundleVersion->getInstalledVersion()->asString() == $bundleVersion->getVersion()->asString()) {
+        if ($this->container->get('bundle.version')->compare($bundleVersion->getInstalledVersion(), $version) >= 0) {
             return $bundleVersion->getInstalledVersion();
         }
-
-        $version = ($version instanceof Version) ? $version : $bundleVersion->getVersion();
 
         if ($output instanceof OutputInterface) {
             $output->write('[<comment>' . $bundle . '</comment>] Updating from ' . $bundleVersion->getInstalledVersion()->asString() . ' to ' . $version->asString() . ' ... ');

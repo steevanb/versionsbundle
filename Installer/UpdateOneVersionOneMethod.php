@@ -44,13 +44,13 @@ trait UpdateOneVersionOneMethod
         $service = $this->container->get('bundle.version');
         foreach ($methods as $method) {
             if ($service->compare($method, $version) == 1) {
-                continue;
+                break;
             }
             if ($service->compare($method, $bundleVersion->getInstalledVersion()) == 1 && $service->compare($method, $bundleVersion->getVersion()) <= 0) {
                 $this->{'update_' . str_replace('.', '_', $method)}();
             }
         }
-        return $bundleVersion->getVersion();
+        return $version;
     }
 
     /**
