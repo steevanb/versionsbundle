@@ -12,6 +12,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
+
     /**
      * {@inheritDoc}
      */
@@ -20,9 +21,15 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('versions');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode->children()
+            ->arrayNode('installOrder')->prototype('array')->children()
+            ->scalarNode('force')->defaultFalse()->end()
+            ->end()->end()->end()
+            ->arrayNode('updateOrder')->prototype('array')->children()
+            ->scalarNode('bundle')->isRequired()->end()
+            ->scalarNode('version')->isRequired()->end()
+            ->end()->end()->end();
+        ;
 
         return $treeBuilder;
     }

@@ -7,6 +7,7 @@ use kujaff\VersionsBundle\Versions\Version;
 use kujaff\VersionsBundle\Entity\BundleVersion;
 use kujaff\VersionsBundle\Exception\StructureException;
 use kujaff\VersionsBundle\Exception\InstallStateException;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class Service
 {
@@ -75,9 +76,10 @@ class Service
      *
      * @param string $bundle
      * @param boolean $force Force installation
+     * @var OutputInterface $output
      * @throws \Exception
      */
-    public function install($bundle, $force = false)
+    public function install($bundle, $force = false, $output = null)
     {
         $manager = $this->container->get('doctrine')->getManager();
         if ($force == false) {
@@ -89,12 +91,19 @@ class Service
             }
         }
 
+        if ($output instanceof OutputInterface) {
+            $output->write('[<comment>' . $bundle . '</comment>] Installing ... ');
+        }
+
         $service = $this->_getService($bundle, 'install', 'kujaff\\VersionsBundle\\Installer\\Install');
         // bundle has a service to do stuff
         if ($service !== false) {
             $installedVersion = $service->install();
             if (!$installedVersion instanceof Version) {
                 throw new StructureException('Service "' . get_class($service) . '" install method must return an instance of kujaff\VersionsBundle\Versions\Version.');
+            }
+            if ($output instanceof OutputInterface) {
+                $output->writeln('<info>' . $installedVersion->asString() . '</info> installed.');
             }
 
             if ($force == true) {
@@ -105,6 +114,10 @@ class Service
             $manager->persist($bundleVersion);
             $manager->flush();
             return $installedVersion;
+        }
+
+        if ($output instanceof OutputInterface) {
+            $output->writeln('<info>' . $installedVersion->asString() . '</info> installed.');
         }
 
         // no install service for this bundle, assume we installed the latest version
@@ -119,11 +132,42 @@ class Service
     }
 
     /**
-     * Update
+     * Install all bundle in required order
      *
-     * @param string $bundle
+     * @var OutputInterface $output
      */
-    public function update($bundle)
+    public function installAll($output = null)
+    {
+        foreach ($this->container->getParameter('versions.installOrder') as $bundle => $options) {
+            try {
+                $bundleVersion = $this->_getBundleVersion($bundle);
+            } catch (\Exception $e) {
+                if ($bundle != 'VersionsBundle') {
+                    throw $e;
+                }
+                $bundleVersion = new BundleVersion('VersionsBundle');
+            }
+            if ($bundleVersion->isInstalled() == false) {
+                $this->install($bundle, $options['force'], $output);
+            }
+        }
+
+        foreach ($this->container->get('bundle.version')->getVersionnedBundles() as $bundle) {
+            $bundleVersion = $this->_getBundleVersion($bundle->getName());
+            if ($bundleVersion->isInstalled() == false) {
+                $this->install($bundle->getName(), false, $output);
+            }
+        }
+    }
+
+    /**
+     * Update a bundle
+     *
+     * @param string $bundle Bundle name
+     * @param Version $version Version to install, null to latest
+     * @param OutputInterface $output
+     */
+    public function update($bundle, $version = null, $output = null)
     {
         $bundleVersion = $this->_getBundleVersion($bundle);
         if ($bundleVersion->isInstalled() == false) {
@@ -135,14 +179,24 @@ class Service
             return $bundleVersion->getInstalledVersion();
         }
 
+        $version = ($version instanceof Version) ? $version : $bundleVersion->getVersion();
+
+        if ($output instanceof OutputInterface) {
+            $output->write('[<comment>' . $bundle . '</comment>] Updating from ' . $bundleVersion->getInstalledVersion()->asString() . ' to ' . $version->asString() . ' ... ');
+        }
+
         $service = $this->_getService($bundle, 'update', 'kujaff\\VersionsBundle\\Installer\\Update');
         // an update service has be found
         if ($service !== false) {
-            $installedVersion = $service->update($bundleVersion);
+            $installedVersion = $service->update($bundleVersion, $version);
 
             // no update service, assume we have updated bundle to the latest version
         } else {
-            $installedVersion = $bundleVersion->getVersion();
+            $installedVersion = $version;
+        }
+
+        if ($output instanceof OutputInterface) {
+            $output->writeln('<info>' . $installedVersion->asString() . '</info> installed.');
         }
 
         $bundleVersion->setInstalledVersion($installedVersion);
@@ -150,6 +204,24 @@ class Service
         $this->container->get('doctrine')->getManager()->flush();
 
         return $installedVersion;
+    }
+
+    /**
+     * Update all bundles
+     *
+     * @param OutputInterface $output
+     */
+    public function updateAll($output = null)
+    {
+        foreach ($this->container->getParameter('versions.updateOrder') as $order) {
+            $bundleVersion = $this->_getBundleVersion($order['bundle']);
+            $this->update($order['bundle'], new Version($order['version']), $output);
+        }
+
+        foreach ($this->container->get('bundle.version')->getVersionnedBundles() as $bundle) {
+            $bundleVersion = $this->_getBundleVersion($bundle->getName());
+            $this->update($bundle->getName(), null, $output);
+        }
     }
 
     /**

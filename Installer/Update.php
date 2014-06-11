@@ -1,7 +1,9 @@
 <?php
+
 namespace kujaff\VersionsBundle\Installer;
 
 use kujaff\VersionsBundle\Entity\BundleVersion;
+use kujaff\VersionsBundle\Versions\Version;
 
 /**
  * Update a bundle
@@ -9,15 +11,15 @@ use kujaff\VersionsBundle\Entity\BundleVersion;
 interface Update
 {
 
-	/**
-	 * Get bundle name
-	 */
-	public function getBundleName();
+    /**
+     * Get bundle name
+     */
+    public function getBundleName();
 
-	/**
-	 * Update bundle
-	 *
-	 * @param BundleVersion $bundleVersion
-	 */
-	public function update(BundleVersion $bundleVersion);
+    /**
+     * Update bundle
+     *
+     * @param BundleVersion $bundleVersion
+     */
+    public function update(BundleVersion $bundleVersion, Version $version);
 }
