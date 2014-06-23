@@ -1,35 +1,46 @@
 services:
+    versions.bundle:
+        class: kujaff\VersionsBundle\Service\BundleVersion
+        calls:
+            - [ setContainer, [ @service_container ] ]
+            
+    versions.version:
+        class: kujaff\VersionsBundle\Service\Version
+        calls:
+            - [ setContainer, [ @service_container ] ]
+        
+    versions.installer:
+        class: kujaff\VersionsBundle\Service\Installer
+        calls:
+            - [ setContainer, [ @service_container ] ]
+
+    versions.generator:
+        class: kujaff\VersionsBundle\Service\Generator\Bundle
+        calls:
+            - [ setContainer, [ @service_container ] ]
     
-    bundle.version:
-        class: kujaff\VersionsBundle\Versions\Service
-        arguments: [@service_container]
+    versions.generator.registerService:
+        class: kujaff\VersionsBundle\Service\Generator\RegisterService
+        calls:
+            - [ setContainer, [ @service_container ] ]
         
-    bundle.installer:
-        class: kujaff\VersionsBundle\Installer\Service
-        arguments: [@service_container]
-        
-    versionsbundle.installer.install:
-        class: kujaff\VersionsBundle\Install\Install
-        arguments: [ @service_container ]
+    versions.install.install:
+        class: kujaff\VersionsBundle\Service\Install\Install
         tags:
             - { name: bundle.install }
-
-    versionsbundle.installer.update:
-        class: kujaff\VersionsBundle\Install\Update
-        arguments: [ @service_container ]
+        calls:
+            - [ setContainer, [ @service_container ] ]
+            
+    versions.install.update:
+        class: kujaff\VersionsBundle\Service\Install\Update
         tags:
             - { name: bundle.update }
+        calls:
+            - [ setContainer, [ @service_container ] ]
 
-    versionsbundle.installer.uninstall:
-        class: kujaff\VersionsBundle\Install\Uninstall
-        arguments: [ @service_container ]
+    versions.install.uninstall:
+        class: kujaff\VersionsBundle\Service\Install\Uninstall
         tags:
             - { name: bundle.uninstall }
-
-    bundle.generator:
-        class: kujaff\VersionsBundle\Generator\Bundle
-        arguments: [ @service_container ]
-    
-    bundle.generator.registerService:
-        class: kujaff\VersionsBundle\Generator\RegisterService
-        arguments: [ @service_container ]
+        calls:
+            - [ setContainer, [ @service_container ] ]

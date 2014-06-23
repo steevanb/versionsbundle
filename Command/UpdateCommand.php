@@ -31,6 +31,6 @@ class UpdateCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $name = $input->getArgument('name');
-        $this->getContainer()->get('bundle.installer')->update($name, null, $output);
+        $this->getContainer()->get('versions.installer')->update($name, null, $output);
     }
 }

@@ -33,6 +33,6 @@ class InstallCommand extends ContainerAwareCommand
     {
         $name = $input->getArgument('name');
 
-        $this->getContainer()->get('bundle.installer')->install($name, $input->getOption('force'), $output);
+        $this->getContainer()->get('versions.installer')->install($name, $input->getOption('force'), $output);
     }
 }

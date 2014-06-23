@@ -10,12 +10,12 @@ kujaff\VersionsBundle\Entity\BundleVersion:
     fields:
         name:
             type: string
-            length: '50'
+            length: 50
         installationDate:
             type: datetime
         installedVersion:
             type: version
-            length: '10'
+            length: 10
         updateDate:
             type: datetime
             nullable: true

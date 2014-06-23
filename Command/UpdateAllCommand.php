@@ -28,6 +28,6 @@ class UpdateAllCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getContainer()->get('bundle.installer')->updateAll($output);
+        $this->getContainer()->get('versions.installer')->updateAll($output);
     }
 }
