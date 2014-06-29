@@ -10,7 +10,7 @@
     "require": {
         "php": ">=5.3.3",
         "symfony/symfony": "~2.3",
-        "kujaff/doctrinebundle": "1.0.x"
+        "steevanb/doctrinefieldtypes": "2.*"
     },
     "target-dir": "kujaff/VersionsBundle",
     "repositories": [
