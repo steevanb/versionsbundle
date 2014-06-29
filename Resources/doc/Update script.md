@@ -14,8 +14,8 @@ Create the service who implements Update :
 namespace MyBundle/Installer;
 
 use kujaff\VersionsBundle\Model\Update as BaseUpdate;
-use kujaff\VersionsBundle\Versions\Version;
-use kujaff\VersionsBundle\Versions\BundleVersion;
+use kujaff\VersionsBundle\Entity\Version;
+use kujaff\VersionsBundle\Entity\BundleVersion;
 
 class Update implements BaseUpdate
 {

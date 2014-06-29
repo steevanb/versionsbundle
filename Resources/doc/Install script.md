@@ -14,7 +14,7 @@ Create the service who implements Install :
 namespace MyBundle/Installer;
 
 use kujaff\VersionsBundle\Model\Install as BaseInstall;
-use kujaff\VersionsBundle\Versions\Version;
+use kujaff\VersionsBundle\Entity\Version;
 
 class Install implements BaseInstall
 {

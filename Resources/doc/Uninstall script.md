@@ -16,7 +16,7 @@ Create the service who implements Uninstall :
 namespace MyBundle/Installer;
 
 use kujaff\VersionsBundle\Model\Uninstall as BaseUninstall;
-use kujaff\VersionsBundle\Versions\Version;
+use kujaff\VersionsBundle\Entity\Version;
 
 class Uninstall implements BaseUninstall
 {
