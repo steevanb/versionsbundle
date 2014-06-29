@@ -3,7 +3,7 @@ Composer :
 # composer.json
 {
     "require": {
-        "kujaff/versionsbundle": "dev-master"
+        "kujaff/versionsbundle": "2.*"
     }
 }
 ```
@@ -29,7 +29,7 @@ Add version type in your Doctrine config :
 doctrine:
     dbal:
         types:
-            version: kujaff\VersionsBundle\Versions\DoctrineType
+            version: kujaff\VersionsBundle\Type\Version
 ```
 
 Install VersionsBundle :
