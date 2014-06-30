@@ -5,7 +5,7 @@ kujaff\VersionsBundle\Entity\Patch:
         bundle:
             type: string
             id: true
-            length: '100'
+            length: 100
         date:
             type: datetime
             id: true
