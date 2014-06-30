@@ -11,7 +11,7 @@ class VersionsBundle extends VersionnedBundle
 
     public function __construct()
     {
-        $this->version = new Version('1.1.0');
+        $this->version = new Version('2.0.0');
     }
 
     public function build(\Symfony\Component\DependencyInjection\ContainerBuilder $container)
