@@ -21,15 +21,22 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('versions');
 
-        $rootNode->children()
-            ->arrayNode('installOrder')->prototype('array')->children()
+        // install order
+        $rootNode->children()->arrayNode('installOrder')->prototype('array')->children()
             ->scalarNode('force')->defaultFalse()->end()
-            ->end()->end()->end()
-            ->arrayNode('updateOrder')->prototype('array')->children()
+            ->end()->end()->end();
+
+        // update order
+        $rootNode->children()->arrayNode('updateOrder')->prototype('array')->children()
             ->scalarNode('bundle')->isRequired()->end()
             ->scalarNode('version')->isRequired()->end()
             ->end()->end()->end();
-        ;
+
+        // check needInstallation
+        $rootNode->children()->booleanNode('checkNeedInstallation')->defaultTrue()->end();
+
+        // check needUpToDate
+        $rootNode->children()->booleanNode('checkNeedUpToDate')->defaultTrue()->end();
 
         return $treeBuilder;
     }

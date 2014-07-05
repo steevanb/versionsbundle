@@ -40,16 +40,17 @@ class VersionnedBundle extends Bundle
     {
         parent::boot();
 
-        if ($this->needInstallation || $this->needUpToDate) {
-            // if you have a better option to know if we are in console or in normal application ...
-            if (isset($GLOBALS['argv']) && is_array($GLOBALS['argv']) && $GLOBALS['argv'][0] == 'app/console') {
-                return null;
-            }
+        // if you have a better option to know if we are in console or in normal application ...
+        if (isset($GLOBALS['argv']) && is_array($GLOBALS['argv']) && $GLOBALS['argv'][0] == 'app/console') {
+            return null;
+        }
 
+        $bundleVersion = null;
+
+        // need to be installed
+        if ($this->getNeedInstallation() && $this->container->getParameter('versions.checkNeedInstallation')) {
             $bundleVersion = $this->container->get('versions.bundle')->getVersion($this->getName());
-
-            // need to be installed
-            if ($this->needInstallation && $bundleVersion->isInstalled() == false) {
+            if ($bundleVersion->isInstalled() == false) {
                 if ($this->getName() == 'VersionsBundle') {
                     $message = 'Bundle "' . $this->getName() . '" needs to be installed. Exec "php app/console bundle:install ' . $this->getName() . ' --force".';
                 } else {
@@ -57,9 +58,14 @@ class VersionnedBundle extends Bundle
                 }
                 throw new VersionException($message);
             }
+        }
 
-            // need to be updated
-            if ($this->needUpToDate && $bundleVersion->needUpdate()) {
+        // need to be updated
+        if ($this->getNeedUpToDate() && $this->container->getParameter('versions.checkNeedUpToDate')) {
+            if ($bundleVersion === null) {
+                $bundleVersion = $this->container->get('versions.bundle')->getVersion($this->getName());
+            }
+            if ($bundleVersion->needUpdate()) {
                 throw new VersionException('Bundle "' . $this->getName() . '" needs to be updated. Exec "php app/console bundle:update ' . $this->getName() . '".');
             }
         }

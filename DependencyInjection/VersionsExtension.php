@@ -25,6 +25,8 @@ class VersionsExtension extends Extension
 
         $container->setParameter('versions.installOrder', $config['installOrder']);
         $container->setParameter('versions.updateOrder', $config['updateOrder']);
+        $container->setParameter('versions.checkNeedInstallation', $config['checkNeedInstallation']);
+        $container->setParameter('versions.checkNeedUpToDate', $config['checkNeedUpToDate']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
