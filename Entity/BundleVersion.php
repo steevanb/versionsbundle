@@ -72,8 +72,8 @@ class BundleVersion
     /**
      * Set installation date
      *
-     * @param \DateTime $installation
-     * @return Bundles
+     * @param \DateTime $date
+     * @return BundleVersion
      */
     public function setInstallationDate($date)
     {
@@ -105,7 +105,7 @@ class BundleVersion
      * Set version
      *
      * @param Version $version
-     * @return Bundles
+     * @return BundleVersion
      */
     public function setVersion(Version $version)
     {
@@ -127,7 +127,7 @@ class BundleVersion
      * Set installed version
      *
      * @param Version $version
-     * @return Bundles
+     * @return BundleVersion
      */
     public function setInstalledVersion(Version $version)
     {
@@ -148,8 +148,8 @@ class BundleVersion
     /**
      * Set update date
      *
-     * @param \DateTime $updatedate
-     * @return Bundles
+     * @param \DateTime $date
+     * @return BundleVersion
      */
     public function setUpdateDate($date)
     {
