@@ -3,10 +3,12 @@ VersionsBundle
 
 Add version information to your bundles, with install, updates, uninstall
 
-Installation
+Installation and configuration
 ============
 
-See [Installation](Resources/doc/Installation.md)
+[Installation](Resources/doc/Installation.md)
+
+[Configuration](Resources/doc/Configuration.md)
 
 Make your bundle versionned
 ===========================
