@@ -19,8 +19,8 @@ versions:
         - { bundle: MyBundle, version: 1.3.0 }
 ```
 
-Cancel installed and updated checks
-===================================
+Cancel installed and updated bundles checks
+===========================================
 
 You can cancel installed and updated bundles verifications, although bundles are configured to do it.
 
