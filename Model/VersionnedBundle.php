@@ -47,7 +47,12 @@ class VersionnedBundle extends Bundle
             }
             $bundleVersion = $this->container->get('versions.bundle')->getVersion($this->getName());
             if ($this->needInstallation && $bundleVersion->isInstalled() == false) {
-                throw new VersionException('Bundle "' . $this->getName() . '" needs to be installed. Exec "php app/console bundle:install ' . $this->getName() . '".');
+                if ($this->getName() == 'VersionsBundle') {
+                    $message = 'Bundle "' . $this->getName() . '" needs to be installed. Exec "php app/console bundle:install ' . $this->getName() . ' --force".';
+                } else {
+                    $message = 'Bundle "' . $this->getName() . '" needs to be installed. Exec "php app/console bundle:install ' . $this->getName() . '".';
+                }
+                throw new VersionException($message);
             }
             if ($this->needUpToDate && $bundleVersion->needUpdate()) {
                 throw new VersionException('Bundle "' . $this->getName() . '" needs to be updated. Exec "php app/console bundle:update ' . $this->getName() . '".');
@@ -63,5 +68,49 @@ class VersionnedBundle extends Bundle
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Define if bundle needs to be installed
+     *
+     * @param boolean $needInstallation
+     * @return VersionnedBundle
+     */
+    public function setNeedInstallation($needInstallation)
+    {
+        $this->needInstallation = $needInstallation;
+        return $this;
+    }
+
+    /**
+     * Get if bundle needs to be installed
+     *
+     * @return boolean
+     */
+    public function getNeedInstallation()
+    {
+        return $this->needInstallation;
+    }
+
+    /**
+     * Define if bundle needs to be up-to-date
+     *
+     * @param boolean $needUpToDate
+     * @return VersionnedBundle
+     */
+    public function setNeedUpToDate($needUpToDate)
+    {
+        $this->needUpToDate = $needUpToDate;
+        return $this;
+    }
+
+    /**
+     * Get if bundle needs to be up-to-date
+     *
+     * @return boolean
+     */
+    public function getNeedUpToDate()
+    {
+        return $this->needUpToDate;
     }
 }
