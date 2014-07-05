@@ -3,7 +3,7 @@
 namespace kujaff\VersionsBundle\Model;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use \kujaff\VersionsBundle\Exception\VersionException;
+use kujaff\VersionsBundle\Exception\VersionException;
 
 /**
  * Extends this class instead of Bundle SF2 class to add getVersion
@@ -45,7 +45,10 @@ class VersionnedBundle extends Bundle
             if (isset($GLOBALS['argv']) && is_array($GLOBALS['argv']) && $GLOBALS['argv'][0] == 'app/console') {
                 return null;
             }
+
             $bundleVersion = $this->container->get('versions.bundle')->getVersion($this->getName());
+
+            // need to be installed
             if ($this->needInstallation && $bundleVersion->isInstalled() == false) {
                 if ($this->getName() == 'VersionsBundle') {
                     $message = 'Bundle "' . $this->getName() . '" needs to be installed. Exec "php app/console bundle:install ' . $this->getName() . ' --force".';
@@ -54,6 +57,8 @@ class VersionnedBundle extends Bundle
                 }
                 throw new VersionException($message);
             }
+
+            // need to be updated
             if ($this->needUpToDate && $bundleVersion->needUpdate()) {
                 throw new VersionException('Bundle "' . $this->getName() . '" needs to be updated. Exec "php app/console bundle:update ' . $this->getName() . '".');
             }
