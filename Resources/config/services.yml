@@ -15,12 +15,7 @@ services:
             - [ setContainer, [ @service_container ] ]
 
     versions.generator:
-        class: kujaff\VersionsBundle\Service\Generator\Bundle
-        calls:
-            - [ setContainer, [ @service_container ] ]
-    
-    versions.generator.registerService:
-        class: kujaff\VersionsBundle\Service\Generator\RegisterService
+        class: kujaff\VersionsBundle\Service\Generator
         calls:
             - [ setContainer, [ @service_container ] ]
         
