@@ -51,6 +51,49 @@ class Generator
 	}
 
 	/**
+	 * Return a ClassGenerator
+	 *
+	 * @param BaseBundle $bundleInfos
+	 * @param string $class Class name
+	 * @param string $interface Interface to use, just class name
+	 * @return ClassGenerator
+	 */
+	protected function _initGenerator(BaseBundle $bundleInfos, $class, $interface)
+	{
+		$return = new ClassGenerator();
+		$return->setClassName($class);
+		$return->setNamespace($bundleInfos->getNamespace() . '\Service\Install');
+		$return->setTraits(array(
+			'kujaff\VersionsBundle\Model\BundleNameFromClassName',
+			'kujaff\VersionsBundle\Model\DoctrineHelper',
+		));
+		$return->setExtends('Symfony\Component\DependencyInjection\ContainerAware');
+		$return->addUse('kujaff\VersionsBundle\Model\\' . $interface, 'Base' . $interface);
+		$return->addInterface('Base' . $interface);
+		$return->setConcatTraits(true);
+
+		return $return;
+	}
+
+	/**
+	 * Register an installer service
+	 *
+	 * @param BaseBundle $bundleInfos
+	 * @param string $type Type (install, update or uninstall)
+	 * @param string $class Class (Install, Update or Uninstall)
+	 */
+	protected function _registerInstallerService(BaseBundle $bundleInfos, $type, $class)
+	{
+		$serviceId = strtolower($bundleInfos->getName()) . '.installer.' . $type;
+		$fullyQualifiedClass = $bundleInfos->getNamespace() . '\Service\Install\\' . $class;
+		$serviceOptions = array(
+			'calls' => array(array('setContainer' => array('@service_container'))),
+			'tags' => array(array('name' => 'bundle.' . $type))
+		);
+		$this->registerService($bundleInfos->getName(), $serviceId, $fullyQualifiedClass, $serviceOptions);
+	}
+
+	/**
 	 * Register a new service in Resources/config/services.yml
 	 *
 	 * @param string $bundle Bundle name, ex 'FooBundle'
@@ -99,12 +142,14 @@ class Generator
 	 * Generate everything to make your bundle versionned
 	 *
 	 * @param string $bundle Name of your bundle, ex 'FooBundle'
-	 * @param string $version Version after installation, ex '1.0.0'
+	 * @param string $versionAfterInstallation Version after installation, ex '1.0.0'
+	 * @param string $updateTrait Trait to use in Update service, like kujaff\VersionsBundle\Model\UpdateOneVersionOneMethod
 	 */
-	public function generate($bundle, $version)
+	public function generate($bundle, $versionAfterInstallation, $updateTrait = null, $force = false)
 	{
-		$this->generateInstallService($bundle, $version);
-		$this->generateUninstallService($bundle);
+		$this->generateInstallService($bundle, $versionAfterInstallation, $force);
+		$this->generateUpdateService($bundle, $updateTrait, $force);
+		$this->generateUninstallService($bundle, $force);
 	}
 
 	/**
@@ -112,39 +157,56 @@ class Generator
 	 *
 	 * @param string $bundle Name of your bundle, ex 'FooBundle'
 	 * @param string $version Version after installation, ex '1.0.0'
+	 * @param boolean $force Indicate if you want to regenerate it although it exists
+	 * @return boolean
 	 */
-	public function generateInstallService($bundle, $version)
+	public function generateInstallService($bundle, $version, $force = false)
 	{
 		$bundleInfos = $this->_getBundleInformations($bundle);
 		// do not create service if another one is already registered
-		if ($this->existsTaggedService($bundle, 'bundle.install')) {
-			//return false;
+		if ($this->existsTaggedService($bundle, 'bundle.install') && $force == false) {
+			return false;
 		}
 
-		$generator = new ClassGenerator();
-		$generator->setClassName('Install');
-		$generator->setNamespace($bundleInfos->getNamespace() . '\Service\Install');
-		$generator->setTraits(array(
-			'kujaff\\VersionsBundle\\Model\\BundleNameFromClassName',
-			'kujaff\\VersionsBundle\\Model\\DoctrineHelper',
-		));
-		$generator->setExtends('Symfony\Component\DependencyInjection\ContainerAware');
-		$generator->addUse('kujaff\VersionsBundle\Model\Install', 'BaseInstall');
-		$generator->addInterface('BaseInstall');
-		$generator->setConcatTraits(true);
+		$generator = $this->_initGenerator($bundleInfos, 'Install', 'Install');
 
-		$generator->startMethod('install', ClassGenerator::VISIBILITY_PUBLIC, false, array('Installation'), 'kujaff\\VersionsBundle\\Versions\\Version');
+		$generator->startMethod('install', ClassGenerator::VISIBILITY_PUBLIC, false, array('Installation'), 'kujaff\VersionsBundle\Entity\Version');
 		$generator->addMethodLine($generator->getCode4Comment('Do your stuff here'));
 		$generator->addMethodLine($generator->getCode4Line('return new Version(\'' . $version . '\');', 0, 0));
 		$generator->finishMethod();
 
 		$generator->write($bundleInfos->getPath() . DIRECTORY_SEPARATOR . 'Service' . DIRECTORY_SEPARATOR . 'Install' . DIRECTORY_SEPARATOR . 'Install.php');
 
-		$serviceOptions = array(
-			'calls' => array(array('setContainer' => array('@service_container'))),
-			'tags' => array(array('name' => 'bundle.install'))
-		);
-		$this->registerService($bundle, strtolower($bundle) . '.installer.install', $bundleInfos->getNamespace() . '\\Service\\Install\\Install', $serviceOptions);
+		$this->_registerInstallerService($bundleInfos, 'install', 'Install');
+
+		return true;
+	}
+
+	public function generateUpdateService($bundle, $trait = null, $force = false)
+	{
+		$bundleInfos = $this->_getBundleInformations($bundle);
+		// do not create service if another one is already registered
+		if ($this->existsTaggedService($bundle, 'bundle.update') && $force == false) {
+			return false;
+		}
+
+		$generator = $this->_initGenerator($bundleInfos, 'Update', 'Update');
+
+		if ($trait != null) {
+			$generator->addTrait($trait);
+		} else {
+			$generator->startMethod('update', ClassGenerator::VISIBILITY_PUBLIC, false, array('Updates'), 'kujaff\VersionsBundle\Entity\Version');
+			$generator->addMethodParameter('bundleVersion', 'kujaff\VersionsBundle\Entity\BundleVersion', null, true, 'Current installed version');
+			$generator->addMethodParameter('version', 'kujaff\VersionsBundle\Entity\Version', null, true, 'Update to this version');
+			$generator->addMethodLine($generator->getCode4Comment('Do your stuff here'));
+			$generator->addMethodLine($generator->getCode4Comment('Return updated version after your patchs', 0, 0));
+			$generator->addMethodLine($generator->getCode4Line('return $version;', 0, 0));
+			$generator->finishMethod();
+		}
+
+		$generator->write($bundleInfos->getPath() . DIRECTORY_SEPARATOR . 'Service' . DIRECTORY_SEPARATOR . 'Install' . DIRECTORY_SEPARATOR . 'Update.php');
+
+		$this->_registerInstallerService($bundleInfos, 'update', 'Update');
 
 		return true;
 	}
@@ -153,39 +215,26 @@ class Generator
 	 * Generate service and register it for uninstall
 	 *
 	 * @param string $bundle Name of your bundle, ex 'FooBundle'
+	 * @param boolean $force Indicate if you want to regenerate it although it exists
+	 * @return boolean
 	 */
-	public function generateUninstallService($bundle)
+	public function generateUninstallService($bundle, $force = false)
 	{
 		$bundleInfos = $this->_getBundleInformations($bundle);
-
 		// do not create service if another one is already registered
-		if ($this->existsTaggedService($bundle, 'bundle.uninstall')) {
+		if ($this->existsTaggedService($bundle, 'bundle.uninstall') && $force == false) {
 			return false;
 		}
 
-		// generate service PHP code
-		$templating = $this->container->get('templating');
-		$params = array(
-			'bundle' => $bundleInfos->getName(),
-			'namespace' => $bundleInfos->getNamespace() . '\\Install',
-			'uses' => array(
-				'kujaff\\VersionsBundle\\Model\\Uninstall as BaseUninstall',
-				'kujaff\\VersionsBundle\\Model\\ContainerAware',
-				'kujaff\\VersionsBundle\\Model\\BundleNameFromClassName',
-				'kujaff\\VersionsBundle\\Model\\DoctrineHelper'
-			),
-			'className' => 'Uninstall',
-			'implements' => array('BaseUninstall'),
-			'traits' => array('ContainerAware', 'BundleNameFromClassName', 'DoctrineHelper')
-		);
-		$templating->render('VersionsBundle:skeleton:uninstall.php.twig', $params);
+		$generator = $this->_initGenerator($bundleInfos, 'Uninstall', 'Uninstall');
 
-		// register service
-		$serviceOptions = array(
-			'arguments' => array('@service_container'),
-			'tags' => array(array('name' => 'bundle.uninstall'))
-		);
-		$this->registerService($bundle, strtolower($bundle) . '.uninstall', $bundleInfos->getNamespace() . '\\Install\\Uninstall', $serviceOptions);
+		$generator->startMethod('uninstall', ClassGenerator::VISIBILITY_PUBLIC, false, array('Uninstall'));
+		$generator->addMethodLine($generator->getCode4Comment('Do your stuff here', 0, 0));
+		$generator->finishMethod();
+
+		$generator->write($bundleInfos->getPath() . DIRECTORY_SEPARATOR . 'Service' . DIRECTORY_SEPARATOR . 'Install' . DIRECTORY_SEPARATOR . 'Uninstall.php');
+
+		$this->_registerInstallerService($bundleInfos, 'uninstall', 'Uninstall');
 
 		return true;
 	}
