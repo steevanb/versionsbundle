@@ -3,7 +3,7 @@ Composer :
 # composer.json
 {
     "require": {
-        "kujaff/versionsbundle": "2.*"
+        "kujaff/versionsbundle": "~2.2"
     }
 }
 ```
