@@ -32,3 +32,8 @@ Get bundle version informations
 ===============================
 
 See [Bundle informations](Resources/doc/Bundle informations.md)
+
+Release notes
+=============
+
+See [Release notes](Resources/doc/Release notes.md)
