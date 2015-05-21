@@ -50,7 +50,7 @@ class VersionnedBundle extends Bundle
         // need to be installed
         if ($this->getNeedInstallation() && $this->container->getParameter('versions.checkNeedInstallation')) {
             $bundleVersion = $this->container->get('versions.bundle')->getVersion($this->getName());
-            if ($bundleVersion->isInstalled() == false) {
+            if ($bundleVersion->isInstalled() === false) {
                 if ($this->getName() == 'VersionsBundle') {
                     $message = 'Bundle "' . $this->getName() . '" needs to be installed. Exec "php app/console bundle:install ' . $this->getName() . ' --force".';
                 } else {

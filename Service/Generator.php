@@ -13,9 +13,8 @@ use Symfony\Component\Yaml\Yaml;
  */
 class Generator
 {
-
-	use ContainerAware,
-	 BundleInformations;
+	use ContainerAware;
+	use BundleInformations;
 
 	/**
 	 * Return services.yml file path
@@ -44,7 +43,7 @@ class Generator
 				$return = array();
 			}
 		}
-		if (array_key_exists('services', $return) == false || is_array($return['services']) == false) {
+		if (array_key_exists('services', $return) === false || is_array($return['services']) === false) {
 			$return['services'] = array();
 		}
 		return $return;
@@ -100,6 +99,7 @@ class Generator
 	 * @param string $service Service name, ex 'foobundle.service'
 	 * @param string $class Fully qualified class name, ex 'Foo\Bar\ClassName'
 	 * @param array $options Options, ex array('arguments' => array('@service_container'), 'tags' => array(array('name' => 'bundle.install'))
+     * @throws \Exception
 	 */
 	public function registerService($bundle, $service, $class, $options = array())
 	{
@@ -164,7 +164,7 @@ class Generator
 	{
 		$bundleInfos = $this->_getBundleInformations($bundle);
 		// do not create service if another one is already registered
-		if ($this->existsTaggedService($bundle, 'bundle.install') && $force == false) {
+		if ($this->existsTaggedService($bundle, 'bundle.install') && $force === false) {
 			return false;
 		}
 
@@ -182,11 +182,18 @@ class Generator
 		return true;
 	}
 
+    /**
+     * @param string $bundle
+     * @param string $trait
+     * @param bool $force
+     * @return bool
+     * @throws \kujaff\VersionsBundle\Exception\BundleNotFoundException
+     */
 	public function generateUpdateService($bundle, $trait = null, $force = false)
 	{
 		$bundleInfos = $this->_getBundleInformations($bundle);
 		// do not create service if another one is already registered
-		if ($this->existsTaggedService($bundle, 'bundle.update') && $force == false) {
+		if ($this->existsTaggedService($bundle, 'bundle.update') && $force === false) {
 			return false;
 		}
 
@@ -222,7 +229,7 @@ class Generator
 	{
 		$bundleInfos = $this->_getBundleInformations($bundle);
 		// do not create service if another one is already registered
-		if ($this->existsTaggedService($bundle, 'bundle.uninstall') && $force == false) {
+		if ($this->existsTaggedService($bundle, 'bundle.uninstall') && $force === false) {
 			return false;
 		}
 
@@ -238,5 +245,4 @@ class Generator
 
 		return true;
 	}
-
 }

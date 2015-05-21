@@ -2,8 +2,6 @@
 
 namespace kujaff\VersionsBundle\Entity;
 
-use kujaff\VersionsBundle\Entity\Version;
-
 /**
  * Bundles
  */

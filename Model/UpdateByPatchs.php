@@ -39,7 +39,7 @@ trait UpdateByPatchs
      */
     protected function _findPatchsFiles($dir)
     {
-        if (is_dir($dir) == false) {
+        if (is_dir($dir) === false) {
             return array();
         }
 
@@ -81,7 +81,7 @@ trait UpdateByPatchs
         $patchPath = $fileInfos->getPath() . DIRECTORY_SEPARATOR . 'Patch';
 
         // directory doesn't exists, no patch to call
-        if (is_dir($patchPath) == false) {
+        if (is_dir($patchPath) === false) {
             return $bundleVersion->getInstalledVersion();
         }
 

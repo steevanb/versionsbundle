@@ -10,10 +10,14 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 
 class Install extends ContainerAware implements BaseInstall
 {
+    use DoctrineHelper;
+    use BundleNameFromClassName;
 
-    use DoctrineHelper,
-        BundleNameFromClassName;
-
+    /**
+     * Install in 1.0.0
+     *
+     * @return Version
+     */
     public function install()
     {
         $this->_dropTables(array('versions_bundles'));

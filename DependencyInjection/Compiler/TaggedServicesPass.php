@@ -17,7 +17,7 @@ class TaggedServicesPass implements CompilerPassInterface
 	 * @param string $tag
 	 * @param string $fileName
 	 */
-	private function _saveTaggedServices($container, $tag, $fileName)
+	private function saveTaggedServices(ContainerBuider $container, $tag, $fileName)
 	{
 		$services = array();
 		foreach ($container->findTaggedServiceIds($tag) as $id => $attributes) {
@@ -34,9 +34,9 @@ class TaggedServicesPass implements CompilerPassInterface
 	 */
 	public function process(ContainerBuilder $container)
 	{
-		$this->_saveTaggedServices($container, 'bundle.install', 'services.bundle.install.php');
-		$this->_saveTaggedServices($container, 'bundle.update', 'services.bundle.update.php');
-		$this->_saveTaggedServices($container, 'bundle.uninstall', 'services.bundle.uninstall.php');
+		$this->saveTaggedServices($container, 'bundle.install', 'services.bundle.install.php');
+		$this->saveTaggedServices($container, 'bundle.update', 'services.bundle.update.php');
+		$this->saveTaggedServices($container, 'bundle.uninstall', 'services.bundle.uninstall.php');
 	}
 
 }

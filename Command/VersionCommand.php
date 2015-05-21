@@ -37,10 +37,10 @@ class VersionCommand extends ContainerAwareCommand
         $output->writeln('<comment>' . $name . '</comment> informations :');
 
         // unversionned bundle
-        if ($bundleVersion->isVersionned() == false) {
+        if ($bundleVersion->isVersionned() === false) {
             $output->writeln('Bundle <error>not versionned</error>.');
             $output->writeln('Unable to get informations, install, update or uninstall it.');
-            $output->writeln('To create a versionned bundle, see <info>' . realpath(__DIR__ . '/../README.md') . '</info>');
+            $output->writeln('To create a versionned bundle, see <info>README.md</info>');
 
             // versionned bundle
         } else {

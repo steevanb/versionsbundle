@@ -49,7 +49,7 @@ class Version
      * Define version
      *
      * @param string $version Full version (ex : 1.2.3)
-     * @throws Exception
+     * @throws VersionException
      */
     public function set($version)
     {

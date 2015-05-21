@@ -2,7 +2,6 @@
 
 namespace kujaff\VersionsBundle\Model;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle as BaseBundle;
 use kujaff\VersionsBundle\Exception\BundleNotFoundException;
 
 trait BundleInformations
@@ -12,7 +11,8 @@ trait BundleInformations
 	 * Return bundle informations
 	 *
 	 * @param string $name
-	 * @return BaseBundle
+	 * @return \Symfony\Component\HttpKernel\Bundle\Bundle
+     * @throws BundleNotFoundException
 	 */
 	protected function _getBundleInformations($name)
 	{
