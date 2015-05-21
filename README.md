@@ -1,3 +1,4 @@
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/eaae8539-16e9-4c53-9be2-2a11b7d4dfd1/big.png)](https://insight.sensiolabs.com/projects/eaae8539-16e9-4c53-9be2-2a11b7d4dfd1)
 VersionsBundle
 ==============
 
