@@ -13,11 +13,11 @@ class TaggedServicesPass implements CompilerPassInterface
 	/**
 	 * Save tagged service into a cache file
 	 *
-	 * @param ContainerBuider $container
+	 * @param ContainerBuilder $container
 	 * @param string $tag
 	 * @param string $fileName
 	 */
-	private function saveTaggedServices(ContainerBuider $container, $tag, $fileName)
+	private function saveTaggedServices(ContainerBuilder $container, $tag, $fileName)
 	{
 		$services = array();
 		foreach ($container->findTaggedServiceIds($tag) as $id => $attributes) {

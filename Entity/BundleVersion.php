@@ -96,7 +96,7 @@ class BundleVersion
      */
     public function isInstalled()
     {
-        return ($this->getInstallationDate() != null);
+        return ($this->getInstallationDate() !== null);
     }
 
     /**

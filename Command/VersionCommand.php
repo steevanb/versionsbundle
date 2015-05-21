@@ -45,7 +45,7 @@ class VersionCommand extends ContainerAwareCommand
             // versionned bundle
         } else {
             $output->writeln('Files version : ' . $bundleVersion->getVersion()->asString());
-            if ($bundleVersion->getInstalledVersion() == null) {
+            if ($bundleVersion->getInstalledVersion() === null) {
                 $output->writeln('Installed version : <error>not installed</error>');
             } else {
                 if ($bundleVersion->needUpdate()) {
@@ -54,7 +54,7 @@ class VersionCommand extends ContainerAwareCommand
                     $output->writeln('Installed version : <info>' . $bundleVersion->getInstalledVersion()->asString() . '</info>');
                 }
                 $output->writeln('Installation date : ' . $bundleVersion->getInstallationDate()->format('Y-m-d H:i:s'));
-                $updateDate = ($bundleVersion->getUpdateDate() == null) ? 'none' : $bundleVersion->getInstallationDate()->format('Y-m-d H:i:s');
+                $updateDate = ($bundleVersion->getUpdateDate() === null) ? 'none' : $bundleVersion->getInstallationDate()->format('Y-m-d H:i:s');
                 $output->writeln('Last update date : ' . $updateDate);
             }
         }

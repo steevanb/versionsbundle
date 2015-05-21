@@ -93,7 +93,7 @@ class Installer extends ContainerAware
                 $output->writeln('<info>' . $installedVersion->asString() . '</info> installed.');
             }
 
-            if ($force == true) {
+            if ($force) {
                 $bundleVersion = $this->getBundleVersion($bundle);
             }
             $bundleVersion->setInstalledVersion($installedVersion);
@@ -108,7 +108,7 @@ class Installer extends ContainerAware
         }
 
         // no install service for this bundle, assume we installed the latest version
-        if ($force == true) {
+        if ($force) {
             $bundleVersion = $this->getBundleVersion($bundle);
         }
         $bundleVersion->setInstalledVersion($bundleVersion->getVersion());

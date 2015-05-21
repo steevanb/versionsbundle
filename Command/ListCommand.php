@@ -42,7 +42,7 @@ class ListCommand extends ContainerAwareCommand
                     $installedVersion = '<info>' . $installedVersion . '</info>';
                 }
                 $installationDate = $bundleVersion->getInstallationDate()->format('Y-m-d H:i:s');
-                $updateDate = ($bundleVersion->getUpdateDate() == null) ? null : $bundleVersion->getUpdateDate()->format('Y-m-d H:i:s');
+                $updateDate = ($bundleVersion->getUpdateDate() === null) ? null : $bundleVersion->getUpdateDate()->format('Y-m-d H:i:s');
             } else {
                 $installedVersion = '<error>' . sprintf('%-10s', 'none') . '</error> ';
                 $installationDate = sprintf('%-19s', null);

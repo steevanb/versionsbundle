@@ -37,12 +37,10 @@ class Version
      */
     public function __construct($version = null, \DateTime $date = null)
     {
-        if ($version != null) {
+        if ($version !== null) {
             $this->set($version);
         }
-        if ($date != null) {
-            $this->setDate($date);
-        }
+        $this->setDate($date);
     }
 
     /**
@@ -112,7 +110,7 @@ class Version
      *
      * @param \DateTime $date
      */
-    public function setDate(\DateTime $date)
+    public function setDate(\DateTime $date = null)
     {
         $this->date = $date;
     }

@@ -26,7 +26,7 @@ trait UpdateByPatchs
      * @param string  $versionB
      * @return int
      */
-    private function _compareDirVersion(&$versionA, &$versionB)
+    private function compareDirVersion(&$versionA, &$versionB)
     {
         return $this->container->get('versions.version')->compare($versionA, $versionB);
     }
@@ -37,7 +37,7 @@ trait UpdateByPatchs
      * @param string $dir
      * @return array
      */
-    protected function _findPatchsFiles($dir)
+    protected function findPatchsFiles($dir)
     {
         if (is_dir($dir) === false) {
             return array();
@@ -62,7 +62,7 @@ trait UpdateByPatchs
      * @param string $className Fully qualified class name
      * @param BundleVersion $bundleVersion
      */
-    protected function _callUpdate($className, BundleVersion $bundleVersion)
+    protected function callUpdate($className, BundleVersion $bundleVersion)
     {
         $update = new $className();
         $update->update($bundleVersion);
@@ -74,7 +74,7 @@ trait UpdateByPatchs
      * @param BundleVersion $bundleVersion
      * @return Version
      */
-    protected function _patchOldVersions(BundleVersion $bundleVersion)
+    protected function patchOldVersions(BundleVersion $bundleVersion)
     {
         $reflection = new \ReflectionClass(get_called_class());
         $fileInfos = new \SplFileInfo($reflection->getFileName());
@@ -92,15 +92,15 @@ trait UpdateByPatchs
         foreach ($finderVersions as $dir) {
             $dirsVersions[] = str_replace('_', '.', substr($dir->getFilename(), 8));
         }
-        usort($dirsVersions, array($this, '_compareDirVersion'));
+        usort($dirsVersions, array($this, 'compareDirVersion'));
 
         // now that we have dirs in right order, let's find patch files
         $return = $bundleVersion->getInstalledVersion();
         foreach ($dirsVersions as $dir) {
-            $files = $this->_findPatchsFiles($patchPath . DIRECTORY_SEPARATOR . 'Version_' . str_replace('.', '_', $dir));
+            $files = $this->findPatchsFiles($patchPath . DIRECTORY_SEPARATOR . 'Version_' . str_replace('.', '_', $dir));
             foreach ($files as $file) {
                 $className = $reflection->getNamespaceName() . '\\Patch\\Version_' . str_replace('.', '_', $dir) . '\\' . $file->getBasename('.' . $file->getExtension());
-                $this->_callUpdate($className, $bundleVersion);
+                $this->callUpdate($className, $bundleVersion);
             }
 
             $return = new Version($dir);
@@ -115,17 +115,17 @@ trait UpdateByPatchs
      * @param BundleVersion $bundleVersion
      * @return Version
      */
-    protected function _patchCurrentVersion(BundleVersion $bundleVersion)
+    protected function patchCurrentVersion(BundleVersion $bundleVersion)
     {
         $reflection = new \ReflectionClass(get_called_class());
         $fileInfos = new \SplFileInfo($reflection->getFileName());
         $manager = $this->container->get('doctrine')->getManager();
         $patchPath = $fileInfos->getPath() . DIRECTORY_SEPARATOR . 'Patch' . DIRECTORY_SEPARATOR . 'Current';
-        $files = $this->_findPatchsFiles($patchPath);
+        $files = $this->findPatchsFiles($patchPath);
 
         foreach ($files as $file) {
             $className = $reflection->getNamespaceName() . '\\Patch\\Current\\' . $file->getBasename('.' . $file->getExtension());
-            $this->_callUpdate($className, $bundleVersion);
+            $this->callUpdate($className, $bundleVersion);
 
             // insert this patch into Patch, to know that we have already called it
             $patch = new Patch();
@@ -148,8 +148,8 @@ trait UpdateByPatchs
      */
     public function update(BundleVersion $bundleVersion)
     {
-        $return = $this->_patchOldVersions($bundleVersion);
-        $this->_patchCurrentVersion($bundleVersion);
+        $return = $this->patchOldVersions($bundleVersion);
+        $this->patchCurrentVersion($bundleVersion);
 
         return $return;
     }
