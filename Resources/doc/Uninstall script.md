@@ -15,10 +15,10 @@ Create the service who implements Uninstall :
 # MyBundle/Installer/Uninstall.php
 namespace MyBundle/Installer;
 
-use kujaff\VersionsBundle\Model\Uninstall as BaseUninstall;
+use kujaff\VersionsBundle\Model\UninstallInterface;
 use kujaff\VersionsBundle\Entity\Version;
 
-class Uninstall implements BaseUninstall
+class Uninstall implements UninstallInterface
 {
     public function getBundleName()
     {

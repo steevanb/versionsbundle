@@ -13,11 +13,11 @@ Create the service who implements Update :
 # MyBundle/Installer/Update.php
 namespace MyBundle/Installer;
 
-use kujaff\VersionsBundle\Model\Update as BaseUpdate;
+use kujaff\VersionsBundle\Model\UpdateInterface;
 use kujaff\VersionsBundle\Entity\Version;
 use kujaff\VersionsBundle\Entity\BundleVersion;
 
-class Update implements BaseUpdate
+class Update implements UpdateInterface
 {
     public function getBundleName()
     {

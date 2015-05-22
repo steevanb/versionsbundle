@@ -13,10 +13,10 @@ Create the service who implements Install :
 # MyBundle/Installer/Install.php
 namespace MyBundle/Installer;
 
-use kujaff\VersionsBundle\Model\Install as BaseInstall;
+use kujaff\VersionsBundle\Model\InstallInterface;
 use kujaff\VersionsBundle\Entity\Version;
 
-class Install implements BaseInstall
+class Install implements InstallInterface
 {
     public function getBundleName()
     {
