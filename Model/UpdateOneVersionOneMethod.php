@@ -14,10 +14,10 @@ trait UpdateOneVersionOneMethod
     /**
      * Find update methods (syntax : update_X_Y_Z())
      *
-     * @param Update $object
+     * @param UpdateInterface $object
      * @return array
      */
-    protected function findUpdateMethods(Update $object)
+    protected function findUpdateMethods(UpdateInterface $object)
     {
         $return = array();
         foreach (get_class_methods(get_class($object)) as $method) {
@@ -35,7 +35,7 @@ trait UpdateOneVersionOneMethod
     /**
      * Update bundle
      *
-     * @param Update $updater Use $this in your class
+     * @param UpdateInterface $updater Use $this in your class
      * @param BundleVersion $bundleVersion
      * @param Version $version Update to this version
      * @return Version
