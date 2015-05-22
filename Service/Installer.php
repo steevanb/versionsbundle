@@ -11,7 +11,6 @@ use \Symfony\Component\DependencyInjection\ContainerAware;
 
 class Installer extends ContainerAware
 {
-
     /**
      * Return tagged services
      *
@@ -21,7 +20,7 @@ class Installer extends ContainerAware
      * @return array
      * @throws StructureException
      */
-    private function _getService($bundle, $tag, $implements)
+    private function getService($bundle, $tag, $implements)
     {
         $fileName = $this->container->getParameter('kernel.cache_dir') . DIRECTORY_SEPARATOR . 'services.bundle.' . $tag . '.php';
         if (file_exists($fileName) === false) {
@@ -48,7 +47,7 @@ class Installer extends ContainerAware
      * @return BundleVersion
      * @throws StructureException
      */
-    private function _getBundleVersion($bundle)
+    private function getBundleVersion($bundle)
     {
         $return = $this->container->get('versions.bundle')->getVersion($bundle);
         if ($return->getVersion() === null) {
@@ -62,15 +61,16 @@ class Installer extends ContainerAware
      *
      * @param string $bundle
      * @param boolean $force Force installation
-     * @var OutputInterface $output
+     * @param OutputInterface $output
+     * @return Version
      * @throws StructureException
      * @throws InstallStateException
      */
     public function install($bundle, $force = false, $output = null)
     {
         $manager = $this->container->get('doctrine')->getManager();
-        if ($force == false) {
-            $bundleVersion = $this->_getBundleVersion($bundle);
+        if ($force === false) {
+            $bundleVersion = $this->getBundleVersion($bundle);
 
             // already installed
             if ($bundleVersion->isInstalled()) {
@@ -82,7 +82,7 @@ class Installer extends ContainerAware
             $output->write('[<comment>' . $bundle . '</comment>] Installing ... ');
         }
 
-        $service = $this->_getService($bundle, 'install', 'kujaff\\VersionsBundle\\Model\\Install');
+        $service = $this->getService($bundle, 'install', 'kujaff\\VersionsBundle\\Model\\Install');
         // bundle has a service to do stuff
         if ($service !== false) {
             $installedVersion = $service->install();
@@ -93,8 +93,8 @@ class Installer extends ContainerAware
                 $output->writeln('<info>' . $installedVersion->asString() . '</info> installed.');
             }
 
-            if ($force == true) {
-                $bundleVersion = $this->_getBundleVersion($bundle);
+            if ($force) {
+                $bundleVersion = $this->getBundleVersion($bundle);
             }
             $bundleVersion->setInstalledVersion($installedVersion);
             $bundleVersion->setInstallationDate(new \DateTime());
@@ -108,8 +108,8 @@ class Installer extends ContainerAware
         }
 
         // no install service for this bundle, assume we installed the latest version
-        if ($force == true) {
-            $bundleVersion = $this->_getBundleVersion($bundle);
+        if ($force) {
+            $bundleVersion = $this->getBundleVersion($bundle);
         }
         $bundleVersion->setInstalledVersion($bundleVersion->getVersion());
         $bundleVersion->setInstallationDate(new \DateTime());
@@ -121,27 +121,27 @@ class Installer extends ContainerAware
     /**
      * Install all bundle in required order
      *
-     * @var OutputInterface $output
+     * @param OutputInterface $output
      */
     public function installAll($output = null)
     {
         foreach ($this->container->getParameter('versions.installOrder') as $bundle => $options) {
             try {
-                $bundleVersion = $this->_getBundleVersion($bundle);
+                $bundleVersion = $this->getBundleVersion($bundle);
             } catch (\Exception $e) {
                 if ($bundle != 'VersionsBundle') {
                     throw $e;
                 }
                 $bundleVersion = new BundleVersion('VersionsBundle');
             }
-            if ($bundleVersion->isInstalled() == false) {
+            if ($bundleVersion->isInstalled() === false) {
                 $this->install($bundle, $options['force'], $output);
             }
         }
 
         foreach ($this->container->get('versions.bundle')->getBundles() as $bundle) {
-            $bundleVersion = $this->_getBundleVersion($bundle->getName());
-            if ($bundleVersion->isInstalled() == false) {
+            $bundleVersion = $this->getBundleVersion($bundle->getName());
+            if ($bundleVersion->isInstalled() === false) {
                 $this->install($bundle->getName(), false, $output);
             }
         }
@@ -157,8 +157,8 @@ class Installer extends ContainerAware
      */
     public function update($bundle, $version = null, $output = null)
     {
-        $bundleVersion = $this->_getBundleVersion($bundle);
-        if ($bundleVersion->isInstalled() == false) {
+        $bundleVersion = $this->getBundleVersion($bundle);
+        if ($bundleVersion->isInstalled() === false) {
             throw new InstallStateException('Bundle "' . $bundle . '" is not installed.');
         }
 
@@ -173,7 +173,7 @@ class Installer extends ContainerAware
             $output->write('[<comment>' . $bundle . '</comment>] Updating from ' . $bundleVersion->getInstalledVersion()->asString() . ' to ' . $version->asString() . ' ... ');
         }
 
-        $service = $this->_getService($bundle, 'update', 'kujaff\\VersionsBundle\\Model\\Update');
+        $service = $this->getService($bundle, 'update', 'kujaff\\VersionsBundle\\Model\\Update');
         // an update service has be found
         if ($service !== false) {
             $installedVersion = $service->update($bundleVersion, $version);
@@ -202,12 +202,10 @@ class Installer extends ContainerAware
     public function updateAll($output = null)
     {
         foreach ($this->container->getParameter('versions.updateOrder') as $order) {
-            $bundleVersion = $this->_getBundleVersion($order['bundle']);
             $this->update($order['bundle'], new Version($order['version']), $output);
         }
 
         foreach ($this->container->get('versions.bundle')->getBundles() as $bundle) {
-            $bundleVersion = $this->_getBundleVersion($bundle->getName());
             $this->update($bundle->getName(), null, $output);
         }
     }
@@ -222,12 +220,12 @@ class Installer extends ContainerAware
     public function uninstall($bundle, $force = false)
     {
         $manager = $this->container->get('doctrine')->getManager();
-        $bundleVersion = $this->_getBundleVersion($bundle);
-        if ($force == false && $bundleVersion->isInstalled() == false) {
+        $bundleVersion = $this->getBundleVersion($bundle);
+        if ($force === false && $bundleVersion->isInstalled() === false) {
             throw new InstallStateException('Bundle "' . $bundle . '" is not installed.');
         }
 
-        $service = $this->_getService($bundle, 'uninstall', 'kujaff\\VersionsBundle\\Model\\Uninstall');
+        $service = $this->getService($bundle, 'uninstall', 'kujaff\\VersionsBundle\\Model\\Uninstall');
         if ($service !== false) {
             $service->uninstall();
         }

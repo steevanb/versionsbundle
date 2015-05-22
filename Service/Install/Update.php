@@ -10,11 +10,13 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 
 class Update extends ContainerAware implements BaseUpdate
 {
+    use DoctrineHelper;
+    use BundleNameFromClassName;
+    use UpdateOneVersionOneMethod;
 
-    use DoctrineHelper,
-        BundleNameFromClassName,
-        UpdateOneVersionOneMethod;
-
+    /**
+     * Update to 1.1.0
+     */
     public function update_1_1_0()
     {
         $this->_executeSQL('

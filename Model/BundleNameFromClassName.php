@@ -11,6 +11,7 @@ trait BundleNameFromClassName
 	 * Return bundle name, search for it in class namespace
 	 *
 	 * @return string
+     * @throws \Exception
 	 */
 	public function getBundleName()
 	{

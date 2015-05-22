@@ -22,7 +22,7 @@ class BundleVersion extends ContainerAware
     {
         $doctrine = $this->container->get('doctrine');
         $return = $doctrine->getRepository('VersionsBundle:BundleVersion')->findOneByName($bundle);
-        if ($return == null) {
+        if ($return === null) {
             $return = new BundleVersionEntity($bundle);
         }
         $bundle = $this->container->get('kernel')->getBundle($bundle);

@@ -2,8 +2,6 @@
 
 namespace kujaff\VersionsBundle\Entity;
 
-use kujaff\VersionsBundle\Entity\Version;
-
 /**
  * Bundles
  */
@@ -98,7 +96,7 @@ class BundleVersion
      */
     public function isInstalled()
     {
-        return ($this->getInstallationDate() != null);
+        return ($this->getInstallationDate() !== null);
     }
 
     /**

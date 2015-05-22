@@ -2,15 +2,12 @@
 
 namespace kujaff\VersionsBundle\Model;
 
-use Doctrine\DBAL\Statement;
-
 /**
  * Helps your using Doctrine
  * Just needs a property ContainerInterface $container
  */
 trait DoctrineHelper
 {
-
     /**
      * Execute a DQL query (only for SELECT, UPDATE or DELETE)
      *
@@ -33,7 +30,7 @@ trait DoctrineHelper
      *
      * @param string $sql
      * @param array $parameters
-     * @return Statement
+     * @return \Doctrine\DBAL\Statement
      */
     protected function _executeSQL($sql, array $parameters = array())
     {
