@@ -51,7 +51,7 @@ class Installer extends ContainerAware
     private function _getBundleVersion($bundle)
     {
         $return = $this->container->get('versions.bundle')->getVersion($bundle);
-        if ($return->getVersion() == null) {
+        if ($return->getVersion() === null) {
             throw new StructureException('Bundle "' . $bundle . '" main class must extends kujaff\VersionsBundle\Model\VersionnedBundle.');
         }
         return $return;

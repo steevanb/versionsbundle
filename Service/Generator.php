@@ -192,7 +192,7 @@ class Generator
 
 		$generator = $this->_initGenerator($bundleInfos, 'Update', 'Update');
 
-		if ($trait != null) {
+		if ($trait !== null) {
 			$generator->addTrait($trait);
 		} else {
 			$generator->startMethod('update', ClassGenerator::VISIBILITY_PUBLIC, false, array('Updates'), 'kujaff\VersionsBundle\Entity\Version');
