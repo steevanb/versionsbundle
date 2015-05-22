@@ -19,7 +19,7 @@ class Update extends ContainerAware implements BaseUpdate
      */
     public function update_1_1_0()
     {
-        $this->_executeSQL('
+        $this->executeSQL('
             CREATE TABLE versions_patchs (
                 bundle VARCHAR(100) NOT NULL,
                 date DATETIME NOT NULL,

@@ -14,7 +14,7 @@ trait BundleInformations
 	 * @return \Symfony\Component\HttpKernel\Bundle\Bundle
      * @throws BundleNotFoundException
 	 */
-	protected function _getBundleInformations($name)
+	protected function getBundleInformations($name)
 	{
 		$bundles = $this->container->get('kernel')->getBundles();
 		if (array_key_exists($name, $bundles) === false) {

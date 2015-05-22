@@ -18,12 +18,12 @@ Available methods :
 public function getBundleName()
 
 // Execute a DQL query, with parameters
-protected function _executeDQL($sql, $parameters = array())
+protected function executeDQL($sql, $parameters = array())
 
 // Execute a SQL query, with parameters
-protected function _executeSQL($sql, $parameters = array())
+protected function executeSQL($sql, $parameters = array())
 	
-// Call it from your update method, like $this->_updateOneVersionOneMethod($this, $bundleVersion);
+// Call it from your update method, like $this->updateOneVersionOneMethod($this, $bundleVersion);
 // Each methods prefixed by 'update_' will be parsed to see if we need to call it for the current update.
 // If a version doesn't need a patch, don't create an empty method, it's useless.
 // Example :
@@ -32,8 +32,8 @@ protected function _executeSQL($sql, $parameters = array())
 //    1) Try to find a method named update_1_0_1 to update bundle from 1.0.0 to 1.0.1
 //    2) Try to find a method named update_1_0_2 to update bundle from 1.0.1 to 1.0.2
 //    3) Try to find a method named update_1_0_3 to update bundle from 1.0.2 to 1.0.3
-protected function _updateOneVersionOneMethod(Update $updater, BundleVersion $bundleVersion)
+protected function updateOneVersionOneMethod(Update $updater, BundleVersion $bundleVersion)
 		
 // Drop tables only if exists (DROP TABLE IF EXISTS)	
-protected function _dropTables(array $tables)
+protected function dropTables(array $tables)
 ```

@@ -20,8 +20,8 @@ class Install extends ContainerAware implements BaseInstall
      */
     public function install()
     {
-        $this->_dropTables(array('versions_bundles'));
-        $this->_executeSQL('
+        $this->dropTables(array('versions_bundles'));
+        $this->executeSQL('
             CREATE TABLE `versions_bundles` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,

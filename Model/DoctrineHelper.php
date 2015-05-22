@@ -15,7 +15,7 @@ trait DoctrineHelper
      * @param array $parameters
      * @return mixed
      */
-    protected function _executeDQL($dql, array $parameters = array())
+    protected function executeDQL($dql, array $parameters = array())
     {
         $em = $this->container->get('doctrine')->getManager();
         $query = $em->createQuery($dql);
@@ -32,7 +32,7 @@ trait DoctrineHelper
      * @param array $parameters
      * @return \Doctrine\DBAL\Statement
      */
-    protected function _executeSQL($sql, array $parameters = array())
+    protected function executeSQL($sql, array $parameters = array())
     {
         $em = $this->container->get('doctrine')->getManager();
         $stmt = $em->getConnection()->prepare($sql);
@@ -48,10 +48,10 @@ trait DoctrineHelper
      *
      * @param array $tables
      */
-    protected function _dropTables(array $tables)
+    protected function dropTables(array $tables)
     {
         foreach ($tables as $table) {
-            $this->_executeSQL('DROP TABLE IF EXISTS ' . $table);
+            $this->executeSQL('DROP TABLE IF EXISTS ' . $table);
         }
     }
 }

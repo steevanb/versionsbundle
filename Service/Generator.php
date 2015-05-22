@@ -22,7 +22,7 @@ class Generator
 	 * @param BaseBundle $bundle
 	 * @return string
 	 */
-	protected function _getYamlFilePath(BaseBundle $bundle)
+	protected function getYamlFilePath(BaseBundle $bundle)
 	{
 		return $bundle->getPath() . DIRECTORY_SEPARATOR . 'Resources' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'services.yml';
 	}
@@ -33,9 +33,9 @@ class Generator
 	 * @param BaseBundle $bundle
 	 * @return array
 	 */
-	protected function _parseServicesYaml(BaseBundle $bundle)
+	protected function parseServicesYaml(BaseBundle $bundle)
 	{
-		$servicesFilePath = $this->_getYamlFilePath($bundle);
+		$servicesFilePath = $this->getYamlFilePath($bundle);
 		$return = array();
 		if (file_exists($servicesFilePath)) {
 			$return = Yaml::parse(file_get_contents($servicesFilePath));
@@ -57,7 +57,7 @@ class Generator
 	 * @param string $interface Interface to use, just class name
 	 * @return ClassGenerator
 	 */
-	protected function _initGenerator(BaseBundle $bundleInfos, $class, $interface)
+	protected function initGenerator(BaseBundle $bundleInfos, $class, $interface)
 	{
 		$return = new ClassGenerator();
 		$return->setClassName($class);
@@ -81,7 +81,7 @@ class Generator
 	 * @param string $type Type (install, update or uninstall)
 	 * @param string $class Class (Install, Update or Uninstall)
 	 */
-	protected function _registerInstallerService(BaseBundle $bundleInfos, $type, $class)
+	protected function registerInstallerService(BaseBundle $bundleInfos, $type, $class)
 	{
 		$serviceId = strtolower($bundleInfos->getName()) . '.installer.' . $type;
 		$fullyQualifiedClass = $bundleInfos->getNamespace() . '\Service\Install\\' . $class;
@@ -103,11 +103,11 @@ class Generator
 	 */
 	public function registerService($bundle, $service, $class, $options = array())
 	{
-		$bundleInfos = $this->_getBundleInformations($bundle);
-		$services = $this->_parseServicesYaml($bundleInfos);
+		$bundleInfos = $this->getBundleInformations($bundle);
+		$services = $this->parseServicesYaml($bundleInfos);
 
 		$services['services'][$service] = array_merge(array('class' => $class), $options);
-		$yamlFilePath = $this->_getYamlFilePath($bundleInfos);
+		$yamlFilePath = $this->getYamlFilePath($bundleInfos);
 		$yamlContent = Yaml::dump($services, 4);
 
 		$result = file_put_contents($yamlFilePath, $yamlContent);
@@ -125,7 +125,7 @@ class Generator
 	 */
 	public function existsTaggedService($bundle, $tag)
 	{
-		$services = $this->_parseServicesYaml($this->_getBundleInformations($bundle));
+		$services = $this->parseServicesYaml($this->getBundleInformations($bundle));
 		foreach ($services['services'] as $params) {
 			if (array_key_exists('tags', $params) && is_array($params['tags'])) {
 				foreach ($params['tags'] as $tagInfos) {
@@ -162,13 +162,13 @@ class Generator
 	 */
 	public function generateInstallService($bundle, $version, $force = false)
 	{
-		$bundleInfos = $this->_getBundleInformations($bundle);
+		$bundleInfos = $this->getBundleInformations($bundle);
 		// do not create service if another one is already registered
 		if ($this->existsTaggedService($bundle, 'bundle.install') && $force === false) {
 			return false;
 		}
 
-		$generator = $this->_initGenerator($bundleInfos, 'Install', 'Install');
+		$generator = $this->initGenerator($bundleInfos, 'Install', 'Install');
 
 		$generator->startMethod('install', ClassGenerator::VISIBILITY_PUBLIC, false, array('Installation'), 'kujaff\VersionsBundle\Entity\Version');
 		$generator->addMethodLine($generator->getCode4Comment('Do your stuff here'));
@@ -177,7 +177,7 @@ class Generator
 
 		$generator->write($bundleInfos->getPath() . DIRECTORY_SEPARATOR . 'Service' . DIRECTORY_SEPARATOR . 'Install' . DIRECTORY_SEPARATOR . 'Install.php');
 
-		$this->_registerInstallerService($bundleInfos, 'install', 'Install');
+		$this->registerInstallerService($bundleInfos, 'install', 'Install');
 
 		return true;
 	}
@@ -191,13 +191,13 @@ class Generator
      */
 	public function generateUpdateService($bundle, $trait = null, $force = false)
 	{
-		$bundleInfos = $this->_getBundleInformations($bundle);
+		$bundleInfos = $this->getBundleInformations($bundle);
 		// do not create service if another one is already registered
 		if ($this->existsTaggedService($bundle, 'bundle.update') && $force === false) {
 			return false;
 		}
 
-		$generator = $this->_initGenerator($bundleInfos, 'Update', 'Update');
+		$generator = $this->initGenerator($bundleInfos, 'Update', 'Update');
 
 		if ($trait !== null) {
 			$generator->addTrait($trait);
@@ -213,7 +213,7 @@ class Generator
 
 		$generator->write($bundleInfos->getPath() . DIRECTORY_SEPARATOR . 'Service' . DIRECTORY_SEPARATOR . 'Install' . DIRECTORY_SEPARATOR . 'Update.php');
 
-		$this->_registerInstallerService($bundleInfos, 'update', 'Update');
+		$this->registerInstallerService($bundleInfos, 'update', 'Update');
 
 		return true;
 	}
@@ -227,13 +227,13 @@ class Generator
 	 */
 	public function generateUninstallService($bundle, $force = false)
 	{
-		$bundleInfos = $this->_getBundleInformations($bundle);
+		$bundleInfos = $this->getBundleInformations($bundle);
 		// do not create service if another one is already registered
 		if ($this->existsTaggedService($bundle, 'bundle.uninstall') && $force === false) {
 			return false;
 		}
 
-		$generator = $this->_initGenerator($bundleInfos, 'Uninstall', 'Uninstall');
+		$generator = $this->initGenerator($bundleInfos, 'Uninstall', 'Uninstall');
 
 		$generator->startMethod('uninstall', ClassGenerator::VISIBILITY_PUBLIC, false, array('Uninstall'));
 		$generator->addMethodLine($generator->getCode4Comment('Do your stuff here', 0, 0));
@@ -241,7 +241,7 @@ class Generator
 
 		$generator->write($bundleInfos->getPath() . DIRECTORY_SEPARATOR . 'Service' . DIRECTORY_SEPARATOR . 'Install' . DIRECTORY_SEPARATOR . 'Uninstall.php');
 
-		$this->_registerInstallerService($bundleInfos, 'uninstall', 'Uninstall');
+		$this->registerInstallerService($bundleInfos, 'uninstall', 'Uninstall');
 
 		return true;
 	}

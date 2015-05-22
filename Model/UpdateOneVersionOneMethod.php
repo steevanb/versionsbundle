@@ -15,8 +15,9 @@ trait UpdateOneVersionOneMethod
      * Find update methods (syntax : update_X_Y_Z())
      *
      * @param Update $object
+     * @return array
      */
-    protected function _findUpdateMethods(Update $object)
+    protected function findUpdateMethods(Update $object)
     {
         $return = array();
         foreach (get_class_methods(get_class($object)) as $method) {
@@ -37,10 +38,11 @@ trait UpdateOneVersionOneMethod
      * @param Update $updater Use $this in your class
      * @param BundleVersion $bundleVersion
      * @param Version $version Update to this version
+     * @return Version
      */
-    protected function _updateOneVersionOneMethod(Update $updater, BundleVersion $bundleVersion, Version $version)
+    protected function updateOneVersionOneMethod(Update $updater, BundleVersion $bundleVersion, Version $version)
     {
-        $methods = $this->_findUpdateMethods($updater);
+        $methods = $this->findUpdateMethods($updater);
         $service = $this->container->get('versions.version');
         foreach ($methods as $method) {
             if ($service->compare($method, $version) == 1) {
@@ -58,9 +60,10 @@ trait UpdateOneVersionOneMethod
      *
      * @param BundleVersion $bundleVersion
      * @param Version $version Update to this version
+     * @return Version
      */
     public function update(BundleVersion $bundleVersion, Version $version)
     {
-        return $this->_updateOneVersionOneMethod($this, $bundleVersion, $version);
+        return $this->updateOneVersionOneMethod($this, $bundleVersion, $version);
     }
 }

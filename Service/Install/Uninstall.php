@@ -17,6 +17,6 @@ class Uninstall extends ContainerAware implements BaseUninstall
      */
     public function uninstall()
     {
-        $this->_dropTables(array('versions_bundles'));
+        $this->dropTables(array('versions_bundles'));
     }
 }
