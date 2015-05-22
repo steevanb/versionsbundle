@@ -40,8 +40,7 @@ class VersionnedBundle extends Bundle
     {
         parent::boot();
 
-        // if you have a better option to know if we are in console or in normal application ...
-        if (isset($GLOBALS['argv']) && is_array($GLOBALS['argv']) && $GLOBALS['argv'][0] == 'app/console') {
+        if (php_sapi_name() == 'cli') {
             return null;
         }
 
