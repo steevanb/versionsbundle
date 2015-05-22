@@ -130,10 +130,6 @@ trait UpdateByPatchs
             // insert this patch into Patch, to know that we have already called it
             $patch = new Patch();
             $patch->setBundle($bundleVersion->getName());
-            $dateYmdhis = substr($file->getBasename('.' . $file->getExtension()), 5);
-            $dateExif = substr($dateYmdhis, 0, 4) . ':' . substr($dateYmdhis, 4, 2) . ':' . substr($dateYmdhis, 6, 2);
-            $dateExif .= ' ' . substr($dateYmdhis, 8, 2) . ':' . substr($dateYmdhis, 10, 2) . ':' . substr($dateYmdhis, 12, 2);
-            $date = new \DateTime($dateExif);
             $patch->setDate(new \DateTime());
             $manager->persist($patch);
             $manager->flush();
