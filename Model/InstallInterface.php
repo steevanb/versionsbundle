@@ -5,7 +5,7 @@ namespace kujaff\VersionsBundle\Model;
 /**
  * Interface to implements to install bundle
  */
-interface Install
+interface InstallInterface
 {
 
     /**

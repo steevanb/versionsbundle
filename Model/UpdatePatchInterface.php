@@ -8,7 +8,7 @@ use kujaff\VersionsBundle\Entity\Version;
 /**
  * Interface to implements when your Update service use UpdateByPatchs trait
  */
-interface UpdatePatch
+interface UpdatePatchInterface
 {
 
 	/**

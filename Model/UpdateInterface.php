@@ -8,7 +8,7 @@ use kujaff\VersionsBundle\Entity\Version;
 /**
  * Update a bundle
  */
-interface Update
+interface UpdateInterface
 {
 
     /**

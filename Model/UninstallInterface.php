@@ -4,7 +4,7 @@ namespace kujaff\VersionsBundle\Model;
 /**
  * Interface to implements for uninstalling a bundle
  */
-interface Uninstall
+interface UninstallInterface
 {
 
 	public function getBundleName();
