@@ -40,7 +40,7 @@ trait UpdateOneVersionOneMethod
      * @param Version $version Update to this version
      * @return Version
      */
-    protected function updateOneVersionOneMethod(Update $updater, BundleVersion $bundleVersion, Version $version)
+    protected function updateOneVersionOneMethod(UpdateInterface $updater, BundleVersion $bundleVersion, Version $version)
     {
         $methods = $this->findUpdateMethods($updater);
         $service = $this->container->get('versions.version');
