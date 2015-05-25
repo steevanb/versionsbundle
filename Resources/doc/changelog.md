@@ -11,3 +11,5 @@
 - [Add] Configuration versions.checkNeedInstallation, to indicate if VersionsBundle has to check if versionned bundles needs to be installed. Must be false on prod environment.
 - [Add] Configuration versions.checkNeedUpToDate, to indicate if VersionsBundle has to check if versionned bundles needs to be updated. Must be false on prod environment.
 - [Add] Settters and getters for needInstallation and needUpToDate on VersionnedBundle
+
+[Back to index](../../README.md)
