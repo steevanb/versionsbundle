@@ -1,14 +1,23 @@
-Composer :
+Composer
+--------
+```
+composer require kujaff/versionsbundle 2.2.*
+```
+
+Or add it manually :
+
 ```json
 # composer.json
 {
     "require": {
-        "kujaff/versionsbundle": "~2.2"
+        "kujaff/versionsbundle": "2.2.*"
     }
 }
 ```
 
-Add bundle to your AppKernel :
+Add bundle to your AppKernel
+----------------------------
+
 ```php
 # app/AppKernel.php
 class AppKernel extends Kernel
@@ -23,7 +32,9 @@ class AppKernel extends Kernel
 }
 ```
 
-Add version type in your Doctrine config :
+Add version type in your Doctrine config
+----------------------------------------
+
 ```yml
 # app/config/config.yml
 doctrine:
@@ -32,7 +43,11 @@ doctrine:
             version: kujaff\VersionsBundle\Type\Version
 ```
 
-Install VersionsBundle :
+Install VersionsBundle
+----------------------
+
 ```php
 php app/console bundle:install VersionsBundle --force
 ```
+
+[Back to index](../../README.md)
