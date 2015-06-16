@@ -1,3 +1,8 @@
+master
+------
+
+- Delete steevanb/utilsbundle requirement
+
 2.2.0
 -----
 

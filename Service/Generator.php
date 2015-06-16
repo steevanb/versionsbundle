@@ -2,7 +2,6 @@
 
 namespace kujaff\VersionsBundle\Service;
 
-use steevanb\UtilsBundle\Model\ContainerAware;
 use kujaff\VersionsBundle\Model\BundleInformations;
 use steevanb\CodeGenerator\PHP\ClassGenerator;
 use Symfony\Component\HttpKernel\Bundle\Bundle as BaseBundle;
@@ -13,9 +12,8 @@ use Symfony\Component\Yaml\Yaml;
  */
 class Generator
 {
-	use ContainerAware;
 	use BundleInformations;
-
+	
 	/**
 	 * Return services.yml file path
 	 *
