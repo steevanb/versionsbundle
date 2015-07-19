@@ -13,13 +13,13 @@ Add version information to your bundles, with install, updates, uninstall
 Make your bundle versionned
 ---------------------------
 
-To add your bundle to versionned bundle list : [Make versionned](Resources/doc/Make bundle versionned.md)
+Add your bundle to versionned bundle list : [Make versionned](Resources/doc/Make bundle versionned.md)
 
-To create an install script : [Install script](Resources/doc/Install script.md)
+Create an install script : [Install script](Resources/doc/Install script.md)
 
-To create an update script : [Update script](Resources/doc/Update script.md)
+Create an update script : [Update script](Resources/doc/Update script.md)
 
-To create an uninstall script : [Uninstall script](Resources/doc/Uninstall script.md)
+Create an uninstall script : [Uninstall script](Resources/doc/Uninstall script.md)
 
 Use EasyInstaller to make install, update and uninstall easy : [EasyInstaller](Resources/doc/EasyInstaller.md)
 
